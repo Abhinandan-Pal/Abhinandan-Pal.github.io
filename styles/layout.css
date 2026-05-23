@@ -1,0 +1,184 @@
+/**
+ * styles/layout.css
+ *
+ * layout system for the website.
+ *
+ * This stylesheet declares the structural composition rules — grid tracks,
+ * container widths, gutters, section rhythm, and editorial offsets — that
+ * the responsive layout depends on. Component-level paint (colour, glass
+ * treatment, elevation, borders) lives in `styles/components/*.css`; this
+ * file deliberately avoids every property watched by the workspace-local
+ * `local/token-only-paint` Stylelint rule (`color`, `background`,
+ * `background-color`, `border-color`, `box-shadow`, `font-family`) so it
+ * stays uncontroversial.
+ *
+ * Token consumption: every value references a token from `styles/tokens.css`
+ * via `var(--name, <documented-default>)`
+ *
+ *   • Layout adapts correctly to every breakpoint tier
+ *   •
+ *   •
+ *
+ * Mobile-first: every grid resolves to a single column at the base
+ * viewport. Multi-column compositions opt in inside the breakpoint blocks
+ * below in ascending order: `--bp-sm` (560 px) → `--bp-md` (860 px) →
+ * `--bp-lg` (1200 px).
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. Defensive base — prevent horizontal scrolling at sub-320 px widths      *
+ *. Long URLs and unbroken Bengali graphemes wrap rather than    *
+ *    pushing the document past the viewport edge.                            *
+ * -------------------------------------------------------------------------- */
+
+body {
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-wrap`content container                 *
+ *                                                                            *
+ * The wrap is the single source of horizontal alignment. Its `max-width`     *
+ * resolves through the `--max-content` clamp in tokens.css, which          *
+ * collapses to 1200 px at wide viewports and tracks 95 vw between 1080 px    *
+ * and 1200 px. Combined with `margin-inline: auto`, the remaining viewport   *
+ * is distributed equally as left and right margins above the cap (*
+ * 7.6).                                                                      *
+ * -------------------------------------------------------------------------- */
+
+.ap-wrap {
+  width: 100%;
+  max-width: var(--max-content, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--gutter, 24px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. Section vertical rhythm                                                 *
+ *                                                                            *
+ * Every section uses the same `.ap-section` shell; the section-to-  *
+ * section visual cadence comes from a uniform `padding-block` token rather  *
+ * than ad-hoc margins — every spacing value an integer multiple of *
+ * 8 px.                                                                    *
+ * -------------------------------------------------------------------------- */
+
+.ap-section {
+  padding-block: var(--space-8, 64px);
+}
+
+.ap-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+  margin-block-end: var(--space-5, 40px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. Mobile-first single-column stack                    *
+ *                                                                            *
+ * Every multi-column grid declares one column at the base breakpoint. The   *
+ * hero grid renders the primary column (`.ap-hero-card`) before the side    *
+ * card in source order, so stacking it vertically below 860 px puts the     *
+ * primary column first as required by .                              *
+ * -------------------------------------------------------------------------- */
+
+.ap-hero-grid,
+.ap-section-card,
+.ap-two-col,
+.ap-entry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4, 32px);
+}
+
+.ap-section-card {
+  /* Section card stacks N timeline entries vertically by default; the
+     extra rhythm separates entries inside a single card. */
+  gap: var(--space-3, 24px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. Tier: ≥ --bp-sm (560 px) —                                       *
+ *                                                                            *
+ * • Action clusters and nav links acquire the 44 × 44 hit-target floor.     *
+ *   The button component CSS (`styles/components/button.css`) is  *
+ *   the canonical owner of this rule; layout.css declares it defensively   *
+ *   so a contact-page anchor that ships before button.css still passes the *
+ *   responsive-layout property test.                                  *
+ * • The contact two-column grid lights up.                                  *
+ * -------------------------------------------------------------------------- */
+
+@media (width >= 560px) {
+  .ap-actions a,
+  .ap-actions button,
+  .ap-nav-links a,
+  .ap-overlay-links a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .ap-two-col {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4, 32px);
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 6. Tier: ≥ --bp-md (860 px) —                             *
+ *                                                                            *
+ * • Hero composes as an asymmetric two-column grid. The 1.35fr / 0.65fr    *
+ *   ratio resolves to ≈ 67.5 % / 32.5 %, which sits comfortably inside the *
+ *   55–75 % envelope mandated by  and produces a 1.5× wider primary *
+ *   column .                                                    *
+ * • Timeline entries reflow to a fixed date column + fluid content column. *
+ *   The publication entries in `#publications` keep the single-column flow *
+ *   (handled by `styles/components/section.css`).                          *
+ * • Editorial offset utilities activate. They are wrapped here   *
+ *   so the Hero and at least two sections can opt in via class     *
+ *   without producing horizontal overflow on mobile. Each   *
+ *   utility displaces by ≥ 24 px from the primary alignment axis.          *
+ * -------------------------------------------------------------------------- */
+
+@media (width >= 860px) {
+  .ap-hero-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-6, 48px);
+    align-items: stretch;
+  }
+
+  .ap-entry {
+    grid-template-columns: minmax(160px, 200px) 1fr;
+    gap: var(--space-4, 32px);
+    align-items: start;
+  }
+
+  /* ---- Editorial offset utilities -------------------------- */
+
+  .ap-offset-eyebrow {
+    /* Pull an eyebrow label into the left gutter by --space-4 (32 px). */
+    transform: translateX(calc(var(--space-4, 32px) * -1));
+  }
+
+  .ap-overlap-figure {
+    /* Lift a figure or pull-quote up over the previous row by 40 px. */
+    margin-block-start: calc(var(--space-5, 40px) * -1);
+  }
+
+  .ap-uneven-gutter {
+    /* Inset content from the section's primary alignment axis by 72 px. */
+    padding-inline-start: var(--space-9, 72px);
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 7. Tier: ≥ --bp-lg (1200 px) —                                      *
+ *                                                                            *
+ * No additional declarations are needed at this tier. `--max-content` is    *
+ * already capped at 1200 px via clamp in tokens.css, and `.ap-wrap`'s     *
+ * `margin-inline: auto` distributes the remaining horizontal space equally  *
+ * to the left and right margins. This media block is intentionally omitted *
+ * to keep the cascade simple; future wide-tier-only adjustments can land   *
+ * here.                                                                    *
+ * -------------------------------------------------------------------------- */

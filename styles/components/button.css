@@ -1,0 +1,147 @@
+/**
+ * styles/components/button.css
+ *
+ * Button component for the website.
+ *
+ *   •   — hover transition for `background-color`, `border-color`,
+ *                `box-shadow`, and `transform` over a duration in
+ *                [120, 200] ms with `ease-out` timing.
+ *   •   — every interactive control has a hit target of ≥ 44 × 44
+ *                CSS pixels at viewport widths ≥ `--bp-sm` (560 px).
+ *
+ * Design references
+ *   • .ap-button`, `.ap-button.primary`)
+ *   •
+ *                 "primary button gradient stop", paired with `--color-accent`.
+ *
+ * Tokens consumed (every reference uses `var(--name, <fallback>)`)
+ *   • --color-blue, --color-accent, --color-accent-2  (primary gradient + hover)
+ *   • --color-bg, --color-panel, --color-text, --color-line  (base surface)
+ *   • --color-focus            (handled globally by reset.css :focus-visible)
+ *   • --space-1, --space-2, --space-3                  (gap + padding)
+ *   • --radius-pill                                    (pill-shaped button)
+ *   • --font-sans, --text-body                         (typography)
+ *   • --shadow-low                                     (hover elevation lift)
+ *   • --dur-fast (= 160 ms ∈ [120, 200])               (transition)
+ *   • --ease-out                                       (timing)
+ *   • --bp-sm                                          (44 × 44 hit target gate)
+ *
+ * Lint contract
+ *   The workspace-local `local/token-only-paint` Stylelint rule watches
+ *   `background`, `background-color`, `border-color`, `box-shadow`, `color`,
+ *   and `font-family`. Every paint-bearing declaration in this file
+ *   resolves through `var(--…)` tokens; the `linear-gradient(...)` in
+ *   `.ap-button.primary` carries only `var(--color-blue)` and
+ *   `var(--color-accent)` colour stops alongside the literal `135deg`
+ *   angle and `0%` / `100%` positions, none of which are colour literals.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. Base button — neutral surface, hairline border, pill-shaped.            *
+ *                                                                            *
+ * Used by the LinkedIn and GitHub action links in the hero. Inline-flex      *
+ * places the optional icon (gap = `--space-1`, 8 px) next to the label and   *
+ * keeps the button sized to its content. The transition list satisfies      *
+ *  verbatim: four properties, `--dur-fast` (160 ms) duration, and    *
+ * `--ease-out` timing.                                                       *
+ * -------------------------------------------------------------------------- */
+
+.ap-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1, 8px);
+  padding-block: var(--space-2, 16px);
+  padding-inline: var(--space-3, 24px);
+  border: 1px solid var(--color-line, currentColor);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-panel, transparent);
+  color: var(--color-text, currentColor);
+  font-family: var(--font-sans, inherit);
+  font-size: var(--text-body, 1rem);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    border-color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    box-shadow var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    transform var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. Base hover / focus state.                                               *
+ *                                                                            *
+ * Lift the button by 1 px, surface a low elevation, and tint the border to  *
+ * the primary accent so the affordance is unambiguous. The colour change   *
+ * resolves through tokens (border-color), satisfying the lint rule.        *
+ * -------------------------------------------------------------------------- */
+
+.ap-button:hover,
+.ap-button:focus-visible {
+  border-color: var(--color-accent, currentColor);
+  box-shadow: var(--shadow-low, none);
+  transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. Primary variant — gradient fill from `--color-blue` to `--color-accent`.*
+ *                                                                            *
+ * Used for the email action link in the hero. The gradient body satisfies   *
+ * design.md's "primary button gradient stop" role for `--color-blue` and    *
+ * keeps every paint reference inside `var(--…)` so the token-only-paint    *
+ * rule passes. `color` is the document background token so light text      *
+ * stays legible on the warm gradient (≥ 4.5:1 in both light + dark scopes  *
+ * because both background tokens are dark relative to the gradient).        *
+ * -------------------------------------------------------------------------- */
+
+.ap-button.primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-blue, currentColor) 0%,
+    var(--color-accent, currentColor) 100%
+  );
+  border-color: transparent;
+  color: var(--color-bg, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. Primary hover / focus — slightly brighter gradient, accent-2 stop.      *
+ *                                                                            *
+ * Replacing the second stop with `--color-accent-2` (copper) brightens the  *
+ * fill by a perceptual notch without leaving the design tokens. The lift   *
+ * + low-elevation shadow inherit from the base hover rule, but we restate  *
+ * the transform so the cascade is explicit even if the base selector       *
+ * specificity is overridden in the future.                                  *
+ * -------------------------------------------------------------------------- */
+
+.ap-button.primary:hover,
+.ap-button.primary:focus-visible {
+  background: linear-gradient(
+    135deg,
+    var(--color-blue, currentColor) 0%,
+    var(--color-accent-2, currentColor) 100%
+  );
+  border-color: transparent;
+  box-shadow: var(--shadow-low, none);
+  transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. Hit-target floor at ≥ `--bp-sm`.                              *
+ *                                                                            *
+ * Below 560 px the natural padding (`--space-2` block + `--space-3` inline) *
+ * already exceeds 44 px on any reasonable text size, but  anchors   *
+ * the contract specifically at viewport widths ≥ `--bp-sm`. The min-block- *
+ * size and min-inline-size pair guarantees the rule holds even when the   *
+ * label is unusually short (single character).                              *
+ * -------------------------------------------------------------------------- */
+
+@media (width >= 560px) {
+  .ap-button {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}

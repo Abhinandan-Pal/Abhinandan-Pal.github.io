@@ -1,0 +1,448 @@
+/**
+ * styles/components/nav.css
+ *
+ * Primary navigation component for the website.
+ *
+ *   • glass envelope (blur ∈ [10, 24] px, alpha ∈ [0.40, 0.70],
+ *               border ∈ [0.5, 1.5] px) on the fixed nav surface, with a
+ *               reduced-transparency fallback that drops `backdrop-filter`
+ *               and switches to an opaque panel fill.
+ *   • navigation invariants: exactly one `.is-active` /
+ *               `[aria-current="page"]` styled link at a time; smooth
+ *               scroll + dialog open/close stay inside the documented
+ *               timing envelope (≤ 400 ms each).
+ *   •  — glass surface applies blur ∈ [10, 24] CSS px,
+ *               alpha ∈ [0.40, 0.70], border ∈ [0.5, 1.5] CSS px on the
+ *               fixed Navigation surface. The chosen values resolve via
+ *               `--glass-blur` (16 px), `--glass-alpha` (0.55), and
+ *               `--glass-border` (1 px), each at the centre of its
+ *               envelope.
+ *   •  — Where reduced-transparency is active, the glass
+ *               treatment falls back to an opaque fill drawn from
+ *               `--color-panel-opaque` and `backdrop-filter` is removed.
+ *   •  — When the hero bottom leaves the viewport top, the nav
+ *               becomes fixed at the top of the viewport with the glass
+ *               treatment applied. The visual transition is driven by
+ *               `[data-stuck]` (toggled by `scripts/nav.js` via a 1 px
+ *               sentinel `IntersectionObserver`).
+ *   •  — Below `--bp-md` (860 px) the inline link list collapses
+ *               and a hamburger surfaces in its place.
+ *   •  — Hamburger overlay open transition completes within
+ *               400 ms (we use 240 ms, comfortably inside the bound).
+ *   •  — Hamburger overlay close transition completes within
+ *               400 ms (240 ms, same envelope).
+ *   •  — Active nav link styled via `.is-active` and the
+ *               `[aria-current="page"]` attribute, both pointing at the
+ *               same accent colour. `scripts/nav.js` guarantees at most
+ *               one active link at a time; the styling rule is selector-
+ *               agnostic about that invariant.
+ *
+ * Design references
+ *   • , ARIA, dialog overlay.
+ *   • , `--glass-alpha`,
+ *                 `--glass-border`, `--glass-fill`.
+ *   • .ap-overlay` brings free Esc handling
+ *                 and focus trap; we keep the markup and only style the
+ *                 open / closed states.
+ *
+ * Tokens consumed (every reference uses `var(--name, <fallback>)`)
+ *   • Surface — --color-panel, --color-panel-opaque, --color-line,
+ *               --color-overlay, --color-text, --color-text-muted,
+ *               --color-accent, --glass-fill
+ *   • Glass shape — --glass-blur, --glass-border
+ *   • Spacing — --space-1, --space-2, --space-3, --space-4, --space-8,
+ *               --gutter
+ *   • Radius — --radius-sm
+ *   • Typography — --font-sans, --font-serif, --text-body, --text-heading
+ *   • Motion — --dur-fast, --ease-out
+ *   • Layout — --bp-md (consumed implicitly via the 860 px breakpoint
+ *              value used in the range media queries below)
+ *
+ * Lint contract
+ *   The workspace-local `local/token-only-paint` Stylelint rule rejects
+ *   literal hex / rgb / hsl / named-colour values for `background`,
+ *   `background-color`, `border-color`, `box-shadow`, `color`, and
+ *   `font-family`. Every paint-bearing declaration here resolves through
+ *   `var(--…)` tokens; the only literal values are `1px` border widths
+ *   and the `transparent` / `currentcolor` keywords used as fallbacks.
+ *
+ * Range media queries
+ *   Modern range syntax `@media (width >= 860px)` is used consistently
+ *   with `styles/layout.css`, `styles/components/card.css`, and
+ *   `styles/components/footer.css`. The `860px` literal mirrors the
+ *   `--bp-md` token defined in `tokens.css`; CSS does not allow custom
+ *   properties inside media-query feature values, so the literal is the
+ *   only practical option.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. `.ap-nav`base top-bar layout                                         *
+ *                                                                            *
+ * Mobile-first: a single horizontal flex row distributing the brand link,   *
+ * the hamburger control, and (≥ --bp-md) the inline link list. The base    *
+ * surface is fully transparent so the hero's generative motif reads        *
+ * cleanly through it; the glass treatment only kicks in once the nav has    *
+ * been pinned via `[data-stuck]`.                                            *
+ *                                                                            *
+ * `transition` lists every property that changes when the nav becomes      *
+ * fixed (background, border, backdrop-filter) so the swap to the glass     *
+ * surface fades in over `--dur-fast` (160 ms) rather than snapping.        *
+ * -------------------------------------------------------------------------- */
+
+.ap-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4, 32px);
+  padding-block: var(--space-2, 16px);
+  padding-inline: var(--gutter, 24px);
+  background: transparent;
+  border-block-end: 1px solid transparent;
+  transition:
+    background var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    border-color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    backdrop-filter var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    -webkit-backdrop-filter var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-nav[data-stuck]`fix-on-scroll glass surface                     *
+ *                                                                            *
+ * `scripts/nav.js` toggles `[data-stuck]` once a 1 px sentinel below the    *
+ * hero leaves the top of the viewport. At that point the nav    *
+ * pins to the top of the viewport and acquires the glass surface    *
+ * treatment:                                                                *
+ *                                                                            *
+ *   • blur:    `--glass-blur` (16 px) — within [10, 24].         *
+ *   • alpha:   `--glass-alpha` (0.55) — within [0.40, 0.70],    *
+ *              applied via `--glass-fill` (color-mix in tokens.css).      *
+ *   • border:  `--glass-border` (1 px) — within [0.5, 1.5].    *
+ *                                                                            *
+ * `saturate(120%)` lifts the colour beneath the blur slightly so the      *
+ * editorial palette stays vivid; this is a stylistic enhancement and is   *
+ * not constrained by the requirement envelope.                            *
+ *                                                                            *
+ * `z-index: 100` keeps the pinned nav above section cards and the hero    *
+ * motif but well below modal overlays (the `<dialog>` uses the top layer). *
+ * -------------------------------------------------------------------------- */
+
+.ap-nav[data-stuck] {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 100;
+  background: var(--glass-fill, var(--color-panel-opaque, transparent));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(120%);
+
+  /* iOS Safari ≤ 17 still requires the -webkit- prefix to apply backdrop-filter. */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(120%);
+  border-block-end: var(--glass-border, 1px) solid var(--color-line, transparent);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. `.ap-brand`motif mark + name link                                    *
+ *                                                                            *
+ * A non-decorated anchor combining the static motif SVG (`.ap-mark`) with  *
+ * the owner's name. Serif family + 600 weight matches the editorial        *
+ * display heading family from `tokens.css`, signalling that this is the   *
+ * brand entrypoint rather than a generic nav link.                        *
+ * -------------------------------------------------------------------------- */
+
+.ap-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2, 16px);
+  color: var(--color-text, currentcolor);
+  font-family: var(--font-serif, serif);
+  font-weight: 600;
+  font-size: var(--text-body, 1rem);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. `.ap-nav-links`inline link list (≥ --bp-md only)                     *
+ *                                                                            *
+ * Hidden by default (mobile-first). `display: flex` is restored at         *
+ * `(width >= 860px)`. The list is itself a flex row of anchors with        *
+ * gap `--space-3` (24 px) between each link.                              *
+ * -------------------------------------------------------------------------- */
+
+.ap-nav-links {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (width >= 860px) {
+  .ap-nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 24px);
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. `.ap-nav-links a`link rest state                                     *
+ *                                                                            *
+ * Muted text colour at body size, a small block padding so the hit         *
+ * target reads as a row (rather than just the glyph baseline), and an     *
+ * eased colour transition that falls inside the [120, 200] ms ease-out    *
+ * envelope mandated by  (160 ms via `--dur-fast`).                 *
+ * -------------------------------------------------------------------------- */
+
+.ap-nav-links a {
+  color: var(--color-text-muted, currentcolor);
+  font-family: var(--font-sans, sans-serif);
+  font-size: var(--text-body, 1rem);
+  text-decoration: none;
+  padding-block: var(--space-1, 8px);
+  transition: color var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 6. Active / hover state                                          *
+ *                                                                            *
+ * Three selectors share one rule:                                            *
+ *   • `:hover`pointer affordance.                          *
+ *   • `.is-active`class hook used by `scripts/nav.js`.         *
+ *   • `[aria-current="page"]`accessible-tree marker for the same state.  *
+ *                                                                            *
+ * `scripts/nav.js` keeps both attributes synchronised on at most one link  *
+ * at a time; the rule itself is selector-agnostic about that    *
+ * invariant — it just paints whichever links carry either marker.          *
+ * -------------------------------------------------------------------------- */
+
+.ap-nav-links a:hover,
+.ap-nav-links a.is-active,
+.ap-nav-links a[aria-current="page"] {
+  color: var(--color-accent, currentcolor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 7. `.ap-hamburger`collapsed-nav toggle (< --bp-md only)                 *
+ *                                                                            *
+ * A 44 × 44 CSS-pixel square button (hit-target floor) that       *
+ * draws three horizontal lines via the `::before`, the inner `<span>`,    *
+ * and the `::after` pseudo-elements. The button is a token-paint surface  *
+ * (`--color-panel` fill, `--color-line` border, `--color-text` glyph) so   *
+ * the lint rule passes without any literal colours.                       *
+ *                                                                            *
+ * Display order:                                                            *
+ *   • visible by default (mobile-first).                                   *
+ *   • hidden at `(width >= 860px)` so the collapsed nav is gone above     *
+ *     `--bp-md`.                                                *
+ * -------------------------------------------------------------------------- */
+
+.ap-hamburger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 0;
+  background: var(--color-panel, transparent);
+  border: 1px solid var(--color-line, currentcolor);
+  border-radius: var(--radius-sm, 12px);
+  color: var(--color-text, currentcolor);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    border-color var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+.ap-hamburger:hover,
+.ap-hamburger:focus-visible {
+  border-color: var(--color-accent, currentcolor);
+}
+
+/* The three horizontal bars: `::before`, the inner `<span>`, and `::after`.
+   Each bar is 18 × 2 CSS pixels, drawn from `currentcolor` so the bar
+   colour follows the parent button's text colour (`--color-text`). Using
+   `currentcolor` (a CSS-wide keyword) keeps the lint rule satisfied. */
+.ap-hamburger::before,
+.ap-hamburger::after,
+.ap-hamburger > span {
+  content: "";
+  display: block;
+  inline-size: 18px;
+  block-size: 2px;
+  background: currentcolor;
+  border-radius: var(--radius-sm, 12px);
+}
+
+/* The inner `<span>` carries the visually-hidden label text; the visual
+   bar is drawn by stretching the same span via the rule above. The label
+   itself stays in the accessibility tree because the visually-hidden
+   utility (defined in reset.css) is applied directly to a sibling
+   `<span class="visually-hidden">` inside the button — see the markup in
+   . */
+
+@media (width >= 860px) {
+  .ap-hamburger {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 8. `.ap-overlay``<dialog>` element styling                              *
+ *                                                                            *
+ * The hamburger overlay is a native `<dialog>`. We style three    *
+ * states explicitly:                                                       *
+ *                                                                            *
+ *   1. The default `dialog` (closed): browsers set `display: none`        *
+ *      automatically; we don't redeclare it.                              *
+ *   2. The closed-but-rendered baseline used as the transition's start    *
+ *      keyframe — `opacity: 0`, `transform: translateY(-8px)`. Browsers    *
+ *      apply this baseline whenever the dialog is in the DOM, so the     *
+ *      `[open]` rule below provides the end keyframe.                    *
+ *   3. The `[open]` state, set by `dialog.showModal`. The transition    *
+ *      duration is 240 ms — comfortably inside the 400 ms envelope        *
+ *      mandated by  / 9.6 for both the open and close transitions. *
+ *                                                                            *
+ * The dialog covers the full viewport (`inset: 0`, `max-width: 100%`,    *
+ * `max-height: 100%`) and uses the opaque panel token so the link list    *
+ * is fully readable regardless of any `prefers-reduced-transparency`     *
+ * preference.                                                              *
+ * -------------------------------------------------------------------------- */
+
+.ap-overlay {
+  position: fixed;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  margin: 0;
+  padding: var(--space-8, 64px);
+  border: 0;
+  background: var(--color-panel-opaque, transparent);
+  color: var(--color-text, currentcolor);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 240ms var(--ease-out, ease-out),
+    transform 240ms var(--ease-out, ease-out);
+}
+
+.ap-overlay[open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* The dialog backdrop fills the rest of the viewport when the overlay is
+   open. We tint it with the dedicated `--color-overlay` token (a
+   pre-blended translucent ink) and fade it in alongside the dialog body.
+   240 ms keeps the close transition inside the  envelope. */
+.ap-overlay::backdrop {
+  background: var(--color-overlay, transparent);
+  transition: opacity 240ms var(--ease-out, ease-out);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 9. `.ap-overlay-links`overlay link list                                 *
+ *                                                                            *
+ * A vertical list of large-type anchors, sized via `--text-heading` so    *
+ * each link reads as a primary destination at touch range. `--space-3`    *
+ * block padding gives every anchor a generous hit target on phones        *
+ * regardless of glyph height.                                  *
+ * -------------------------------------------------------------------------- */
+
+.ap-overlay-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ap-overlay-links a {
+  display: block;
+  padding-block: var(--space-3, 24px);
+  color: var(--color-text, currentcolor);
+  font-family: var(--font-serif, serif);
+  font-size: var(--text-heading, 1.72rem);
+  text-decoration: none;
+  transition: color var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+.ap-overlay-links a:hover,
+.ap-overlay-links a:focus-visible,
+.ap-overlay-links a.is-active,
+.ap-overlay-links a[aria-current="page"] {
+  color: var(--color-accent, currentcolor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 10. Reduced-transparency fallback                                *
+ *                                                                            *
+ * When the visitor opts out of transparency, the fixed nav drops its      *
+ * `backdrop-filter` (which would otherwise still render a blurred surface *
+ * even with the opaque fill) and switches to the opaque panel token. The *
+ * `tokens.css` scope already redefines `--glass-fill` to                  *
+ * `--color-panel-opaque` inside the same media block; this rule is the    *
+ * belt-and-braces measure that also strips the filter property.           *
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-transparency: reduce) {
+  .ap-nav[data-stuck] {
+    background: var(--color-panel-opaque, transparent);
+    backdrop-filter: none;
+
+    /* iOS Safari ≤ 17 still requires the -webkit- prefix to clear the filter. */
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 11. Reduced-motion fallback                                      *
+ *                                                                            *
+ * Under `prefers-reduced-motion: reduce`, the overlay's open / close      *
+ * transitions are removed. The dialog still animates between its         *
+ * `display: none` and `[open]` states, but instantly: the browser will   *
+ * jump to the end keyframe in zero milliseconds because both the body    *
+ * and the `::backdrop` carry `transition: none`. `reset.css` already    *
+ * applies a global `transition-duration: 0.001ms` clamp under the same  *
+ * media query, but stating the override here keeps the navigation        *
+ * contract self-documenting at the rule level.                          *
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-overlay,
+  .ap-overlay::backdrop {
+    transition: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 12. `.ap-nav-sentinel`fix-on-scroll probe                     *
+ *                                                                            *
+ * A purely structural 1-pixel element placed at the bottom of               *
+ * `<header.ap-hero>` (see `index.html`). `scripts/nav.js` installs an      *
+ * `IntersectionObserver` on this sentinel; once it leaves the top of the *
+ * viewport (i.e. the hero has scrolled past) the observer toggles         *
+ * `[data-stuck]` on `nav.ap-nav`, which triggers the pinned-glass         *
+ * treatment defined in section 2.                                          *
+ *                                                                            *
+ * The element ships with an inline `style="height: 1px"` in the HTML so   *
+ * the sentinel still has measurable height before the asynchronously     *
+ * loaded stylesheet swap completes. This rule restates the    *
+ * height for parity, locks the inline width to the full content row, and *
+ * declares `aria-hidden="true"` semantics by visually hiding the         *
+ * pointer. There are no paint declarations — the sentinel must remain    *
+ * invisible.                                                               *
+ * -------------------------------------------------------------------------- */
+
+.ap-nav-sentinel {
+  display: block;
+  width: 100%;
+  height: 1px;
+  pointer-events: none;
+}

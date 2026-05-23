@@ -1,0 +1,141 @@
+/**
+ * styles/components/chip.css
+ *
+ * Inline pill / label chips for the website.
+ *
+ * Three flavours sit alongside one generic base:
+ *
+ *   • `.ap-chip`generic neutral pill (panel-fill, soft text).
+ *   • `.ap-chip-link`interactive pill anchor used inside publication
+ *                        and entry cards (paper, talk, poster, arXiv).
+ *   • `.ap-kicker`small uppercase eyebrow already typeset in
+ *                        `styles/typography.css`; this file only adds the
+ *                        chip-specific structural styling (inline-flex
+ *                        layout + the optional leading `.ap-dot` bullet
+ *                        used inside the hero kicker, design.md
+ *                        "Hero section contract").
+ *   • `.ap-meta`small muted inline label for venue / date /
+ *                        location runs that sit beneath an entry title.
+ *
+ * Every paint-bearing declaration consumes a token from `styles/tokens.css`
+ * via `var(--name, <documented-default>)` so the workspace-local Stylelint
+ * rule `local/token-only-paint` passes.
+ *
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. `.ap-chip`generic neutral pill                                       *
+ *                                                                            *
+ * Used wherever a small static label sits in flow with body text — for      *
+ * example, a venue label preceding a publication title. The shape (radius   *
+ * + padding) matches `.ap-chip-link` so a chip and a chip-link can sit      *
+ * side-by-side without any vertical jitter.                                 *
+ * -------------------------------------------------------------------------- */
+
+.ap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 8px);
+  padding-block: var(--space-1, 8px);
+  padding-inline: var(--space-2, 16px);
+  border: 1px solid var(--color-line, currentColor);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-panel, transparent);
+  color: var(--color-text-soft, currentColor);
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-chip-link`interactive pill anchor                               *
+ *                                                                            *
+ * Differences from `.ap-chip`:                                               *
+ *   • transparent rest fill so the chip-link reads as an anchor first and   *
+ *     a pill second, picking up the panel fill on hover for affordance.    *
+ *   • ink-blue text colour from `--color-blue` so it visually matches the   *
+ *     editorial link colour set on `<a>` in typography.css.                 *
+ *   • hover transitions `background-color`, `border-color`, `color`, and    *
+ *     `transform` over `--dur-fast` (160 ms) with the ease-out token,       *
+ *     which is inside the [120, 200] ms ease-out envelope mandated by      *
+ *      for buttons and chip-links.                                  *
+ *                                                                            *
+ * `text-decoration: none` overrides the default editorial underline from   *
+ * typography.css `a` so the pill outline is the only visual frame.         *
+ * -------------------------------------------------------------------------- */
+
+.ap-chip-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 8px);
+  padding-block: var(--space-1, 8px);
+  padding-inline: var(--space-2, 16px);
+  border: 1px solid var(--color-line, currentColor);
+  border-radius: var(--radius-pill, 999px);
+  background: transparent;
+  color: var(--color-blue, currentColor);
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    border-color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    transform var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+.ap-chip-link:hover,
+.ap-chip-link:focus-visible {
+  border-color: var(--color-accent, currentColor);
+  background: var(--color-panel, transparent);
+  color: var(--color-accent, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. `.ap-kicker`chip-specific structural styling                         *
+ *                                                                            *
+ * Typography (font / size / weight / uppercase / soft-text colour) is       *
+ * declared in `styles/typography.css` alongside `.ap-eyebrow`. Here we add  *
+ * the pill-shaped structure that lets a hero kicker render as              *
+ *   "● PhD Candidate · School of Computer Science"                         *
+ * with a leading accent dot. The dot is a child element so the kicker can  *
+ * be used without it (in which case the inline-flex still gives consistent *
+ * baseline alignment with surrounding text).                               *
+ * -------------------------------------------------------------------------- */
+
+.ap-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 8px);
+}
+
+.ap-kicker .ap-dot {
+  display: inline-block;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 999px;
+  background: var(--color-accent, currentColor);
+
+  /* Dot is decorative — `aria-hidden="true"` is set in markup. Suppress
+     interaction so the kicker copy keeps the click target. */
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. `.ap-meta`small muted inline label                                   *
+ *                                                                            *
+ * Used for venue / date / location meta lines that sit beneath an entry    *
+ * title. Sans family + muted text colour keeps the meta visually demoted   *
+ * relative to the serif title without drifting outside the body type       *
+ * scale.                                                                   *
+ * -------------------------------------------------------------------------- */
+
+.ap-meta {
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-text-muted, currentColor);
+}

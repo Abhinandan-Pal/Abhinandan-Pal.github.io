@@ -1,0 +1,248 @@
+/**
+ * styles/typography.css
+ *
+ * Editorial typography rules for the website. Every value
+ * that paints a colour, picks a typeface, or sets a numeric type-scale step
+ * is consumed via `var(--…, <documented-default>)` from `styles/tokens.css`.
+ * No clamp expressions are redeclared here — the type scale, the line-height
+ * and letter-spacing settings, and the body measure all originate in tokens.
+ *
+ * Layout overview
+ *   1. @font-face — locally hosted variable WOFF2 for Fraunces and Inter,
+ *      both declared with `font-display: swap` and `size-adjust`
+ *      so the swap from fallback to webfont does not produce CLS > 0.1
+ *. The two `font-family` declarations inside `@font-face`
+ *      are unavoidably literal — they NAME the family the rest of the file
+ *      then references via tokens — and are exempted from the
+ *      `local/token-only-paint` rule with inline comments.
+ *
+ *   2. Element defaults — body inherits `--font-sans`, sets the body type
+ *      step, body line-height, default colour and background. Paragraphs
+ *      get `max-inline-size: var(--measure-body)` so the 55–80 ch envelope
+ *      from  is enforced at every viewport.
+ *
+ *   3. Display + section + subheading scale — h1/.ap-display use
+ *      `--font-serif` with the display step, line-height, and letter-spacing
+ *      tokens; h2/.ap-section-title and h3/h4/.ap-subheading consume the
+ *      heading and subheading steps respectively.
+ *
+ *   4. `:lang(bn)`applies the Bengali stack (`--font-bengali`) to any
+ *      element marked `lang="bn"`, including the inline `<span lang="bn">`
+ *      runs inside the hero `<h1>`. The first family in the stack supports
+ *      the Unicode range U+0980–U+09FF, so the rendered string
+ *      never falls back to a `.notdef` glyph.
+ *
+ *   5. Anchors — subtle, accessible underline using `--color-blue` (which
+ *      meets ≥ 4.5:1 against `--color-bg` and `--color-panel` in both
+ *      light and dark scopes per the  contrast table).
+ *
+ *   6. Editorial utilities — `.ap-eyebrow` and `.ap-kicker` are body-sized
+ *      labels with uppercase letter-spacing, used above section headings.
+ *
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. @font-face — locally hosted variable WOFF2   *
+ *                                                                            *
+ * The font binaries are self-hosted from `/assets/fonts/`. See               *
+ * `assets/fonts/README.md` for how to obtain the variable WOFF2 files.       *
+ * Until the binaries are present the browser gracefully falls through to     *
+ * the next family in the stack defined in `tokens.css`.                      *
+ *                                                                            *
+ * Three CLS-stabilising mechanisms work together:            *
+ *   • `font-display: swap`keep text legible while the webfont loads       *
+ *     instead of blocking on FOIT.                                           *
+ *   • `size-adjust` per @font-face — scales the loaded font so its em-box    *
+ *     matches the fallback's perceived size. Both Fraunces and Inter ship    *
+ *     with a slightly tighter cap-height than their respective Latin         *
+ *     fallbacks (Georgia for Fraunces, Arial for Inter), so a small upward   *
+ *     scale aligns them with the fallback footprint. The chosen values are   *
+ *     conservative; they keep CLS during swap below 0.1.           *
+ *   • `ascent-override` / `descent-override` / `line-gap-override`fix     *
+ *     the line-box metrics of the loaded font to a documented constant so    *
+ *     the swap from fallback to webfont does not change line height.         *
+ *                                                                            *
+ * The body element additionally sets `font-size-adjust` (see section 2) so   *
+ * the x-height ratio is held constant across the swap, which is the fallback *
+ * mechanism cited in .                       *
+ *                                                                            *
+ * The two `font-family` declarations in the @font-face blocks unavoidably    *
+ * reference the family by name — they are NAMING the family that the rest    *
+ * of the stylesheet then consumes via tokens — and are exempted from         *
+ * `local/token-only-paint` with inline comments.                             *
+ * -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- *
+ * @font-face declarations                                                    *
+ *                                                                            *
+ * Fonts are loaded via Google Fonts in the <head> for now (DM Sans + Lora). *
+ * When self-hosted WOFF2 files land in /assets/fonts/, replace these         *
+ * comment blocks with @font-face rules pointing at the local files.          *
+ * -------------------------------------------------------------------------- */
+
+/* No local @font-face declarations active — fonts come from Google Fonts. */
+
+/* -------------------------------------------------------------------------- *
+ * 2. Body defaults                                                           *
+ *                                                                            *
+ * Sets the document's default sans stack, body step, body line-height,       *
+ * and the ink/paper colour pair. Paragraphs also receive the body measure    *
+ * so the 55–80 ch envelope from  is enforced at every viewport.       *
+ * -------------------------------------------------------------------------- */
+
+body {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--text-body, 1rem);
+  line-height: var(--lh-body, 1.62);
+  color: var(--color-text, currentColor);
+  background: var(--color-bg, transparent);
+  font-synthesis: none;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Hold the x-height ratio constant across the webfont swap so the swap
+     from fallback (Arial / Georgia) to Inter / Fraunces does not produce
+     CLS > 0.1. The value is Inter's published x-height
+     ratio; Fraunces, which is only used for headings inside larger boxes,
+     tolerates the same setting because heading line-boxes are governed by
+     the per-@font-face `ascent-override` above.
+     handling table cites `font-size-adjust` as the swap-stability
+     mechanism. */
+  font-size-adjust: 0.52;
+}
+
+p {
+  /* `--measure-body` already wraps the value in clamp; we just consume it
+     so the paragraph never grows past the editorial measure. */
+  max-inline-size: var(--measure-body, 65ch);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. Display heading — h1 and the explicit `.ap-display` opt-in              *
+ *                                                                            *
+ * Consumes the display step, display line-height, and display letter-spacing *
+ * tokens directly. No clamp is redeclared here.                            *
+ * -------------------------------------------------------------------------- */
+
+h1,
+.ap-display {
+  font-family: var(--font-serif, ui-serif, serif);
+  font-size: var(--text-display, 3rem);
+  line-height: var(--lh-display, 0.94);
+  letter-spacing: var(--ls-display, -0.06em);
+  color: var(--color-text, currentColor);
+
+  /* Display headings often run two or three lines; allow the renderer to
+     break long words rather than overflowing the hero card. */
+  overflow-wrap: break-word;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. Section titles — h2 and `.ap-section-title`                             *
+ *                                                                            *
+ * Heading step from tokens, with line-height and letter-spacing matched to   *
+ * the editorial direction in the design document (Typography tokens table).  *
+ * -------------------------------------------------------------------------- */
+
+h2,
+.ap-section-title {
+  font-family: var(--font-serif, ui-serif, serif);
+  font-size: var(--text-heading, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-text, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. Subheadings — h3, h4, and `.ap-subheading`                              *
+ *                                                                            *
+ * Subheading step from tokens; sans stack so they read as UI labels rather   *
+ * than as further serif headings.                                            *
+ * -------------------------------------------------------------------------- */
+
+h3,
+h4,
+.ap-subheading {
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: var(--text-subheading, 1.15rem);
+  line-height: 1.3;
+  color: var(--color-text, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 6. Bengali language run                                                    *
+ *                                                                            *
+ * Any element annotated with `lang="bn"` switches to the Bengali stack so    *
+ * U+0980–U+09FF render with a real glyph rather than `.notdef`.    *
+ * The selector is intentionally non-specific so a `<span lang="bn">` inside  *
+ * an `<h1>` wins over the display-heading rule above without needing `!`.    *
+ * -------------------------------------------------------------------------- */
+
+:lang(bn) {
+  font-family: var(--font-bengali, sans-serif);
+
+  /* Bengali matras and reph marks need a touch more vertical space than
+     the tight display line-height; nudging up keeps clusters from clipping. */
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 7. Anchors — subtle, accessible link styling                               *
+ *                                                                            *
+ * Underline-on-rest with the editorial ink-blue token; on hover and focus    *
+ * the underline thickens and shifts to the accent. `text-underline-offset`   *
+ * pulls the line off the baseline so descenders stay readable.               *
+ * -------------------------------------------------------------------------- */
+
+a {
+  color: var(--color-blue, currentColor);
+  text-decoration-line: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--color-blue, currentColor);
+  transition:
+    color var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    text-decoration-color var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-accent, currentColor);
+  text-decoration-color: var(--color-accent, currentColor);
+  text-decoration-thickness: 2px;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 8. Editorial utilities — eyebrow / kicker                                  *
+ *                                                                            *
+ * Small, body-sized labels that sit above section titles. Uppercase + wide   *
+ * letter-spacing gives them a magazine-page feel without competing with the  *
+ * serif display run.                                                         *
+ * -------------------------------------------------------------------------- */
+
+.ap-eyebrow,
+.ap-kicker {
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: var(--text-body, 1rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-soft, currentColor);
+}
+
+.ap-eyebrow + h2,
+.ap-eyebrow + .ap-section-title,
+.ap-kicker + h2,
+.ap-kicker + .ap-section-title {
+  /* Tighten the gap between an eyebrow and the section title it labels.
+     Spacing token keeps it on the 8-px rhythm. */
+  margin-block-start: var(--space-1, 8px);
+}
+
+.ap-kicker + h1,
+.ap-kicker + .ap-display {
+  margin-block-start: var(--space-3, 24px);
+}

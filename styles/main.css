@@ -1,0 +1,36 @@
+/* styles/main.css — async-loaded stylesheet aggregator.
+ *
+ * Imported in cascade order: tokens first (so every consumer below sees
+ * fresh custom properties), then reset, typography, layout, motion, then
+ * components. The build step inlines tokens.css + reset.css + a hero
+ * subset as critical CSS in the document head; this file is the
+ * downstream stylesheet that fills in the rest of the design system and
+ * is loaded asynchronously via:
+ *
+ *   <link rel="preload" as="style" href="/styles/main.css"
+ *         onload="this.rel='stylesheet'">
+ *   <noscript><link rel="stylesheet" href="/styles/main.css"></noscript>
+ *
+ * Tokens are re-imported here (not just inlined) so non-build paths
+ * (raw source served during `vite dev`, the `<noscript>` fallback, and
+ * any consumer that bypasses critical-CSS extraction) still see the
+ * full token surface. Re-declaring identical custom properties on
+ * `:root` is idempotent under the cascade.
+ *
+ * This file intentionally contains no declarations of its own; the
+ * `local/token-only-paint` Stylelint rule therefore has nothing to
+ * flag here.
+ */
+
+@import url('./tokens.css');
+@import url('./reset.css');
+@import url('./typography.css');
+@import url('./layout.css');
+@import url('./motion.css');
+@import url('./components/nav.css');
+@import url('./components/hero.css');
+@import url('./components/section.css');
+@import url('./components/card.css');
+@import url('./components/button.css');
+@import url('./components/chip.css');
+@import url('./components/footer.css');

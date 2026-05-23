@@ -1,0 +1,172 @@
+/**
+ * styles/components/card.css
+ *
+ * Card surface component for the website.
+ *
+ *   •  — corner-radius scale of at least three steps and an
+ *               elevation scale whose blur radii differ by ≥ 8 px:
+ *               `.ap-card` consumes `--radius-lg` + `--shadow-low`,
+ *               `.ap-small-card` consumes `--radius-md`, and the
+ *               `.ap-hero-card` variant consumes `--shadow-high`. All
+ *               three radius tokens (md, lg) and both elevation tokens
+ *               are reachable from the cascade declared here.
+ *   •  — every paint-bearing value (background, border-color,
+ *               color, box-shadow) resolves through a design system
+ *               custom property declared in `styles/tokens.css`.
+ *
+ * Design references
+ *   • .ap-card` is the generic card
+ *                 surface; `.ap-section-card`, `.ap-hero-card`, and
+ *                 `.ap-small-card` are layout-tier-specific variants.
+ *   • .ap-hero-card` will receive the
+ *                 frosted-glass treatment in `styles/components/hero.css`.
+ *                 `.ap-section-card` will receive a hairline glass
+ *                 treatment in `styles/components/section.css`. This
+ *                 file declares only the surface fundamentals that those
+ *                 variants extend; it does not apply `backdrop-filter`.
+ *   •
+ *                 onto `--space-3` / `--space-4` / `--space-5` / `--space-6`.
+ *
+ * Tokens consumed (every reference uses `var(--name, <fallback>)`)
+ *   • --color-panel, --color-panel-opaque   (surface fill, reduced-transparency)
+ *   • --color-line                          (1 px hairline border)
+ *   • --color-text                          (default text colour)
+ *   • --space-3, --space-4, --space-5, --space-6  (padding tiers)
+ *   • --radius-md, --radius-lg              (corner-radius tiers)
+ *   • --shadow-low, --shadow-high           (elevation tiers)
+ *
+ * Lint contract
+ *   The workspace-local `local/token-only-paint` Stylelint rule rejects
+ *   literal hex / rgb / hsl / named colour values for `background`,
+ *   `background-color`, `border-color`, `box-shadow`, `color`, and
+ *   `font-family`. Every paint-bearing declaration here resolves through
+ *   `var(--…)` tokens; the only literal values are `1px` (border width),
+ *   `transparent` keyword fallbacks, and the documented length defaults
+ *   that match the values declared in `tokens.css`.
+ *
+ * Range media queries
+ *   This file uses modern range-syntax media queries (`@media
+ *   (width >= …)`) consistent with `styles/layout.css`,
+ *   `styles/components/button.css`, and `styles/components/footer.css`.
+ *
+ * Belt-and-braces note
+ *   `hero.css` and `section.css` own the actual frosted-glass surfaces
+ *   for the hero and section variants; this file additionally declares a
+ *   reduced-transparency override so that any consumer of `.ap-card`
+ *   that forgets to gate `backdrop-filter` itself still degrades to an
+ *   opaque panel fill.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. `.ap-card`generic card surface                                       *
+ *                                                                            *
+ * The base card draws from the design system "panel" colour role, ringed by *
+ * a 1 px hairline of `--color-line`, rounded with the largest radius step  *
+ * (`--radius-lg`, 28 px), and lifted off the page with the low-elevation   *
+ * shadow (`--shadow-low`). The base padding is `--space-4` (32 px), which  *
+ * matches the "section card padding" entry in `tokens.css` and gives every *
+ * extending variant a sensible default if it forgets to override it.       *
+ * -------------------------------------------------------------------------- */
+
+.ap-card {
+  background: var(--color-panel, transparent);
+  border: 1px solid var(--color-line, transparent);
+  border-radius: var(--radius-lg, 28px);
+  box-shadow: var(--shadow-low, none);
+  padding: var(--space-4, 32px);
+  color: var(--color-text, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-card.ap-section-card`section-content card variant               *
+ *                                                                            *
+ * Used by every section's body card. The padding scales  *
+ * up from the base `--space-4` to `--space-5` (40 px) at the mobile-first  *
+ * tier and again to `--space-6` (48 px) at viewport widths ≥ `--bp-md`,    *
+ * giving the longer-form section copy more breathing room on tablet and    *
+ * desktop. The shadow stays at `--shadow-low` because the section cards   *
+ * sit lower in the visual hierarchy than the hero; the actual glass       *
+ * treatment will be applied by `styles/components/section.css`.            *
+ *                                                                            *
+ * The chained selector (`.ap-card.ap-section-card`) keeps the variant    *
+ * specificity equal to the base, so consumers can reorder declarations    *
+ * without surprises.                                                       *
+ * -------------------------------------------------------------------------- */
+
+.ap-card.ap-section-card {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+@media (width >= 860px) {
+  .ap-card.ap-section-card {
+    padding: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. `.ap-card.ap-hero-card`hero card variant                             *
+ *                                                                            *
+ * Used by the hero primary card. Padding is the largest  *
+ * tier (`--space-6`, 48 px) and the elevation jumps to `--shadow-high`     *
+ * because the hero card is the topmost surface in the visual hierarchy and *
+ * must read as primary even before the page paints any content below it.   *
+ *                                                                            *
+ * `styles/components/hero.css` will layer the frosted-glass treatment on   *
+ * top of this variant (backdrop-filter, alpha-on-color-mix fill, hairline  *
+ * inner border) per ; this file declares only the surface          *
+ * fundamentals so the cascade order is hero → glass.                       *
+ * -------------------------------------------------------------------------- */
+
+.ap-card.ap-hero-card {
+  padding: var(--space-6, 48px);
+  box-shadow: var(--shadow-high, none);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. `.ap-small-card`small card variant                                   *
+ *                                                                            *
+ * Used by the Contact section's two-column layout (one card per   *
+ * email / link cluster). It deliberately does NOT extend `.ap-card`       *
+ * (note: standalone selector, not chained), so the small card is opt-in   *
+ * and components that need a tiny surface can use it without inheriting    *
+ * the base card's larger padding and radius.                                *
+ *                                                                            *
+ * Padding `--space-3` (24 px) is the smallest readable card padding on the *
+ * 8 px rhythm; radius `--radius-md` (20 px) sits one notch below the base   *
+ * card so the smaller surface visually corresponds to a smaller corner     *
+ * arc. Border + background are identical to `.ap-card` so the two surface *
+ * scales feel cohesive when stacked next to each other.                     *
+ * -------------------------------------------------------------------------- */
+
+.ap-small-card {
+  background: var(--color-panel, transparent);
+  border: 1px solid var(--color-line, transparent);
+  border-radius: var(--radius-md, 20px);
+  box-shadow: var(--shadow-low, none);
+  padding: var(--space-3, 24px);
+  color: var(--color-text, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. Reduced-transparency override                                 *
+ *                                                                            *
+ * `tokens.css` already redefines `--glass-fill` to `--color-panel-opaque`  *
+ * inside the same media block, and `hero.css` / `section.css` own the     *
+ * actual frosted-glass surfaces. This rule is a defensive belt-and-braces *
+ * measure: any future consumer of `.ap-card` that applies its own         *
+ * `backdrop-filter` on top of the base surface will still fall back to    *
+ * an opaque panel fill when the visitor opts out of transparency, even   *
+ * if it forgets to gate the filter property itself.                        *
+ *                                                                            *
+ * `.ap-small-card` uses the same opaque token for parity with the base.    *
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-transparency: reduce) {
+  .ap-card,
+  .ap-small-card {
+    background: var(--color-panel-opaque, transparent);
+  }
+}

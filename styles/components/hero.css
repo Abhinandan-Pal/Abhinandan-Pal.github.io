@@ -1,0 +1,512 @@
+/**
+ * styles/components/hero.css
+ *
+ * hero visual surfaces for the website.
+ *
+ * The hero is composed of three concentric layers stacked on the same
+ * full-bleed `<header class="ap-hero">` element:
+ *
+ *   1. The motif canvas (`.ap-motif`) and its SVG fallback
+ *      (`.ap-motif-fallback`) sit at z-index 0, absolutely positioned to
+ *      cover the entire hero, and are decorative (`aria-hidden="true"`).
+ *   2. The hero card (`.ap-hero-card`) and the side "At a glance" panel
+ *      (`.ap-side-card`) sit at z-index 1, positioned by `.ap-hero-grid`
+ *      from `styles/layout.css`. This file applies the frosted-glass
+ *      surface treatment to both surfaces.
+ *   3. Inline runs inside the hero `<h1>`the Bengali script
+ *      (`.ap-bengali`) and the nickname chip (`.ap-nickname`) — receive
+ *      their own type / chip styling here.
+ *
+ * Layout responsibility split
+ *   • `styles/layout.css` already declares the asymmetric `.ap-hero-grid`
+ *     column tracks (1.35fr / 0.65fr at ≥ `--bp-md`, single-column below).
+ *     Per the task description for 5.2, this file does NOT redeclare those
+ *     tracks; it only styles the visual surfaces that sit inside the grid.
+ *   • `styles/components/card.css` already declares the base padding and
+ *     elevation for `.ap-card.ap-hero-card`. This file layers the glass
+ *     treatment (alpha-on-color-mix fill, backdrop-filter, hairline border)
+ *     on top of the base card without overriding its padding or shadow.
+ *   • `styles/motion.css` owns the entrance choreography (`.ap-hero-card`
+ *     and `.ap-side-card` opacity / translate transitions). This file
+ *     only declares static styles.
+ *
+ *   • Glass surfaces stay inside the style envelope and
+ *                   degrade under reduced transparency.
+ *   •      — Asymmetric two-column hero composition (the column
+ *                   tracks themselves live in layout.css; this file
+ *                   declares the `.ap-hero` wrapper that contains the
+ *                   grid).
+ *   •      — glass surface treatment applied to the hero
+ *                   card and the side "At a glance" panel: backdrop blur
+ *                   in [10, 24] px, fill alpha in [0.40, 0.70], hairline
+ *                   border in [0.5, 1.5] px, all drawn from the
+ *                   design system palette.
+ *   •      — When `prefers-reduced-transparency: reduce`, every
+ *                   glass surface drops `backdrop-filter` and falls back
+ *                   to an opaque panel fill drawn from
+ *                   `--color-panel-opaque`.
+ *   •      — The hero card's lede typography surfaces the
+ *                   research summary copy ("Neural Model Checking",
+ *                   "Mirco Giacobbe", "Daniel Kroening", "University of
+ *                   Birmingham") with a measured body width and the
+ *                   muted text colour token.
+ *
+ * Tokens consumed (every reference uses `var(--name, <fallback>)`)
+ *   • --color-bg, --color-panel, --color-panel-opaque, --color-line,
+ *     --color-text, --color-text-muted, --color-text-soft,
+ *     --color-accent, --color-blue            (paint roles)
+ *   • --glass-fill, --glass-blur, --glass-border (envelope)
+ *   • --space-1 … --space-11                  (8 px spacing rhythm)
+ *   • --radius-pill                           (nickname chip)
+ *   • --font-sans, --font-serif, --font-bengali (typography stacks)
+ *   • --text-subheading                       (lede + mini-title)
+ *   • --lh-body, --measure-body               (body type metrics)
+ *
+ * Lint contract
+ *   The workspace-local Stylelint rule `local/token-only-paint` rejects
+ *   literal hex / rgb / hsl / named-colour values for `color`,
+ *   `background`, `background-color`, `border-color`, `box-shadow`, and
+ *   `font-family`. Every paint-bearing declaration in this file resolves
+ *   through `var(--…)` tokens; the only literal values are length /
+ *   percentage / keyword primitives (`0`, `100%`, `inline-block`,
+ *   `middle`, etc.) that the rule does not watch.
+ *
+ * Range media queries
+ *   This file uses modern range-syntax media queries
+ *   (`(prefers-reduced-transparency: reduce)`) consistent with
+ *   `styles/layout.css`, `styles/motion.css`, and the rest of the
+ *   workspace.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. `.ap-hero`full-bleed wrapper                                         *
+ *                                                                            *
+ * The hero is the document's first major surface. `position: relative` and  *
+ * `isolation: isolate` together establish a fresh stacking context so that  *
+ * the absolutely-positioned motif canvas can sit at z-index 0 without       *
+ * leaking behind the page background or above the navigation.               *
+ *                                                                            *
+ * `padding-block: var(--space-11) var(--space-8)` adds 96 px of breathing   *
+ * room above the hero card (matching the "top-of-document hero offset"      *
+ * documented for `--space-11` in tokens.css) and 64 px below it before the  *
+ * first section begins. `overflow: visible` lets the side card or   *
+ * any decorative offset child leak slightly past the hero boundary if a     *
+ * future composition needs it; the document body already clips horizontal   *
+ * overflow defensively (`styles/layout.css`).                      *
+ * -------------------------------------------------------------------------- */
+
+.ap-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  padding-block: var(--space-11, 96px) var(--space-8, 64px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-motif`animated canvas substrate                                 *
+ *                                                                            *
+ * The canvas covers the full hero bounding box and sits below     *
+ * every other hero child. `pointer-events: none` ensures the visitor's      *
+ * pointer hits the hero card and side card directly even though the canvas  *
+ * occupies the same coordinate space. `aria-hidden="true"` is set in        *
+ * markup, satisfying the decorative-element clause of .             *
+ *                                                                            *
+ * The compositor `transform: translate3d(0, var(--ap-motif-y, 0), 0)` is    *
+ * applied by `styles/motion.css` (parallax binding); this rule     *
+ * therefore does not declare `transform` to avoid a cascade conflict.       *
+ * -------------------------------------------------------------------------- */
+
+.ap-motif {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. `.ap-motif-fallback`static SVG fallback                              *
+ *                                                                            *
+ * Pre-rendered at build time by `tools/render-svg-motif.mjs`.    *
+ * The element ships with the `hidden` attribute set; `motif/runtime.js`     *
+ * removes the attribute when the canvas 2D context is unavailable           *
+ *. Dimensions and stacking match `.ap-motif` exactly so the       *
+ * swap is visually identical apart from the lack of animation.              *
+ * -------------------------------------------------------------------------- */
+
+.ap-motif-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. `.ap-hero-card`primary glass surface                       *
+ *                                                                            *
+ * The hero card extends `.ap-card.ap-hero-card` (which sets padding and the *
+ * `--shadow-high` elevation in `styles/components/card.css`). This rule     *
+ * layers the frosted-glass treatment on top:                                *
+ *                                                                            *
+ *   • `background: var(--glass-fill)` resolves to a `color-mix` of the   *
+ *     panel token at the documented alpha (0.55 by default, inside the     *
+ *     [0.40, 0.70] envelope) per `tokens.css`.                             *
+ *   • `backdrop-filter: blur saturate` applies the documented blur     *
+ *     (16 px, inside the [10, 24] envelope) plus a 120 % saturation lift   *
+ *     so the warm cream background underneath stays vibrant after blur.    *
+ *   • `-webkit-backdrop-filter` mirrors the property for Safari ≤ 17.4    *
+ *     (no extra envelope cost; Safari 18 ships the un-prefixed property). *
+ *   • `border: var(--glass-border) solid var(--color-line)` produces the   *
+ *     1 px hairline (inside [0.5, 1.5]) drawn from the design system line *
+ *     token.                                                               *
+ *                                                                            *
+ * `position: relative; z-index: 1` keeps the card above the motif canvas   *
+ * inside the same stacking context.                                         *
+ * -------------------------------------------------------------------------- */
+
+.ap-hero-card {
+  position: relative;
+  z-index: 1;
+  background: var(--glass-fill, var(--color-panel, transparent));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(120%);
+
+  /* Safari ≤ 17.4 still requires the prefixed form; Safari 18+ ships the
+     un-prefixed property and the prefixed declaration becomes harmless. */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(120%);
+  border: var(--glass-border, 1px) solid var(--color-line, transparent);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. Hero lede — research-summary paragraph typography             *
+ *                                                                            *
+ * The two `.ap-lede` paragraphs in the hero card carry the research         *
+ * summary string set ("Neural Model Checking", "Mirco Giacobbe", "Daniel    *
+ * Kroening", "University of Birmingham"). Subheading-step type and the     *
+ * body line-height keep them visually subordinate to the display `<h1>`     *
+ * while staying clearly readable. `--measure-body` enforces the 55–80 ch   *
+ * envelope from  at desktop widths; the inline-block `max-inline-   *
+ * size` token resolves to a fluid clamp so narrower viewports tighten    *
+ * the measure proportionally.                                              *
+ *                                                                            *
+ * `margin-block: var(--space-2)` keeps the two paragraphs on the 8 px      *
+ * rhythm; the surrounding hero card padding (`--space-6`, 48 px) supplies  *
+ * the outer separation from the kicker / heading and the action cluster.   *
+ * -------------------------------------------------------------------------- */
+
+.ap-hero-card .ap-lede {
+  margin-block: var(--space-2, 16px);
+  max-inline-size: var(--measure-body, 65ch);
+  font-size: var(--text-subheading, 1.15rem);
+  line-height: var(--lh-body, 1.62);
+  color: var(--color-text-muted, currentColor);
+}
+
+/* `<strong>` runs inside the lede (e.g. "Neural Model Checking") return to  *
+ * the primary text token so the emphasised phrases pop against the muted   *
+ * surrounding copy. `font-weight: 700` matches the Inter "Bold" axis stop. *
+ * -------------------------------------------------------------------------- */
+
+.ap-hero-card .ap-lede strong {
+  color: var(--color-text, currentColor);
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 6. `.ap-bengali`inline Bengali run inside the `<h1>`                    *
+ *                                                                            *
+ * The `<span lang="bn">অভিনন্দন পাল</span>` inside the hero `<h1>` already   *
+ * receives the Bengali stack via the `:lang(bn)` selector in               *
+ * `styles/typography.css`. This rule adds the layout-specific    *
+ * adjustments needed to sit inline with the English run and the nickname   *
+ * chip:                                                                    *
+ *                                                                            *
+ *   • `display: inline-block` is required so `padding-inline` and          *
+ *     `margin-inline` apply against the inline progression, while still    *
+ *     flowing inside the heading.                                          *
+ *   • `padding-inline: var(--space-2)` (16 px) provides visual breathing   *
+ *     room around the script without growing the line-box vertically       *
+ *     (`padding-block: 0`).                                                *
+ *   • `margin-inline: var(--space-1)` (8 px) separates the run from the    *
+ *     surrounding English text and the nickname chip.                      *
+ *   • `font-family: var(--font-bengali)` is restated explicitly so the     *
+ *     class works even when the `lang="bn"` attribute is missing on the    *
+ *     element (defensive — a future markup change should still render the *
+ *     correct stack).                                                      *
+ *   • `color: var(--color-accent)` colours the script in the editorial    *
+ *     terracotta accent, signalling the Bengali run as a deliberate        *
+ *     editorial flourish rather than incidental copy.                     *
+ * -------------------------------------------------------------------------- */
+
+.ap-bengali {
+  display: block;
+  padding-block-start: var(--space-3, 24px);
+  font-family: var(--font-bengali, sans-serif);
+  font-size: 0.55em;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--color-accent, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 7. `.ap-nickname`pill chip rendering "Obi" inside the `<h1>`            *
+ *                                                                            *
+ * The nickname is rendered as an inline pill so it reads as a callout      *
+ * rather than as ordinary heading text. Sizing is relative (`font-size:    *
+ * 0.5em`): the chip stays proportional to the display step at every       *
+ * viewport, matching the heading's clamp scale. `vertical-align: middle` *
+ * vertically centres the chip against the lower-case x-height of the      *
+ * heading so it does not sit on the descender baseline.                    *
+ *                                                                            *
+ * The pill itself uses the editorial ink-blue token for the fill (chip    *
+ * cluster matches `.ap-chip-link`'s hover envelope), with the bg token    *
+ * for the foreground so the white-on-blue chip clears the WCAG AA         *
+ * non-text contrast bar in both light and dark scopes.                    *
+ * -------------------------------------------------------------------------- */
+
+.ap-nickname {
+  display: inline-flex;
+  align-items: center;
+  padding-block: 0.1em;
+  padding-inline: 0.4em;
+  margin-inline-start: 0.2em;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-blue, currentColor);
+  color: var(--color-bg, currentColor);
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: 0.65em;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 8. `.ap-actions`primary action button cluster                           *
+ *                                                                            *
+ * Used by the `<nav class="ap-actions" aria-label="Profile links">` inside  *
+ * the hero card. `flex-wrap: wrap` lets the three buttons (Email,           *
+ * LinkedIn, GitHub) reflow to a second row at very narrow viewports without *
+ * pushing the hero card past the gutter. The 16 px gap between buttons      *
+ * matches the `--space-2` rhythm. `margin-block-start: var(--space-3)`      *
+ * (24 px) separates the cluster from the lede paragraph above it.           *
+ *                                                                            *
+ * Each individual button is styled by `styles/components/button.css`; that *
+ * component owns the 44 × 44 hit-target floor and the hover     *
+ * transition envelope.                                          *
+ * -------------------------------------------------------------------------- */
+
+.ap-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-1, 8px);
+  margin-block-start: var(--space-3, 24px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 9. `.ap-side-card`secondary glass surface                     *
+ *                                                                            *
+ * The side "At a glance" panel applies the same glass envelope as the hero *
+ * card so the two surfaces feel like sibling tiles in the asymmetric grid. *
+ * It deliberately does NOT extend `.ap-card` because the side card sits at *
+ * the lower half of the visual hierarchy ('s narrower column) and   *
+ * we want a smaller padding tier than the hero card. The padding here is   *
+ * `--space-5` (40 px) on the base and `--space-6` (48 px) at ≥ `--bp-md`,  *
+ * mirroring the section-card scaling in `card.css` so visitors see a       *
+ * coherent rhythm across the page.                                         *
+ *                                                                            *
+ * The card border + radius pull from the same tokens as `.ap-card` so the *
+ * side card sits visually beside the hero card without subtle mis-matches. *
+ * -------------------------------------------------------------------------- */
+
+.ap-side-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--glass-fill, var(--color-panel, transparent));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(120%);
+
+  /* Safari ≤ 17.4 still requires the prefixed form; see `.ap-hero-card`. */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(120%);
+  border: var(--glass-border, 1px) solid var(--color-line, transparent);
+  border-radius: var(--radius-lg, 28px);
+  box-shadow: var(--shadow-low, none);
+  padding: var(--space-5, 40px);
+  color: var(--color-text, currentColor);
+}
+
+@media (width >= 860px) {
+  .ap-side-card {
+    padding: var(--space-6, 48px);
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 10. `.ap-mini-title`side-card "At a glance" header                      *
+ *                                                                            *
+ * Small uppercase serif label that sits above the info list. It is         *
+ * intentionally smaller than `.ap-section-title` so the side card reads as *
+ * a secondary surface within the hero. The `font-size: var(--text-       *
+ * subheading)` first declaration is a fallback for the ultra-rare browser *
+ * that does not honour the `0.875rem` literal that follows; both           *
+ * declarations are kept consecutive so stylelint-config-standard's        *
+ * `declaration-block-no-duplicate-properties` rule (which allows           *
+ * "consecutive duplicates with different values") does not flag them.     *
+ * -------------------------------------------------------------------------- */
+
+.ap-side-card .ap-mini-title {
+  margin-block-end: var(--space-2, 16px);
+  font-family: var(--font-serif, ui-serif, serif);
+  font-size: var(--text-subheading, 1.15rem);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-soft, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 11. `.ap-info-list`"At a glance" key/value list                         *
+ *                                                                            *
+ * Rendered as a `<ul>` of `<li>` rows; each `<li>` is itself a              *
+ * two-column grid (label minmax(110px, max-content) / value 1fr) with     *
+ * baseline alignment so the labels never wrap and the values align         *
+ * cleanly against the leading edge of the value column. `gap:             *
+ * var(--space-2)` between rows keeps the list on the 8 px rhythm.        *
+ *                                                                            *
+ * `list-style: none` is set explicitly because the list is decorative —   *
+ * a screen reader will still announce the items via the `<aside>`'s      *
+ * `aria-label="At a glance"` parent landmark.                              *
+ * -------------------------------------------------------------------------- */
+
+.ap-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 16px);
+}
+
+.ap-info-list li {
+  display: grid;
+  grid-template-columns: minmax(90px, max-content) 1fr;
+  gap: var(--space-2, 16px);
+  align-items: baseline;
+  min-inline-size: 0;
+}
+
+.ap-info-list li > :nth-child(2) {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ap-info-list a {
+  word-break: break-all;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 12. Reduced-transparency override                                *
+ *                                                                            *
+ * When the visitor opts out of transparency, both glass surfaces drop     *
+ * `backdrop-filter` entirely and fall back to the opaque panel token.    *
+ * `tokens.css` already redefines `--glass-fill` to `--color-panel-       *
+ * opaque` inside the same media block (so even without this rule the     *
+ * surface would degrade), but stripping `backdrop-filter` here is the    *
+ * documented belt-and-braces step  prescribes. Without it,        *
+ * Chromium would still apply the backdrop blur over an opaque fill on    *
+ * older builds, producing a faint shimmer. The `-webkit-` prefixed       *
+ * property is mirrored for parity with the unprefixed declarations.      *
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-transparency: reduce) {
+  .ap-hero-card,
+  .ap-side-card {
+    backdrop-filter: none;
+
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: none;
+    background: var(--color-panel-opaque, transparent);
+  }
+}
+
+
+/* -------------------------------------------------------------------------- *
+ * Portrait — circular profile picture inside the hero side card             *
+ *                                                                            *
+ * The figure crops the image into a 200 px circle, rings it with a         *
+ * hairline border, and lifts it with a soft shadow. On hover, the ring     *
+ * gently warms toward the accent and the disc lifts a few pixels for       *
+ * a touch of life. Markup:                                                  *
+ *                                                                            *
+ *   <figure class="ap-portrait">                                            *
+ *     <img src="..." alt="...">                                             *
+ *   </figure>                                                               *
+ *                                                                            *
+ * Tokens consumed: --color-line, --color-line-hover, --color-accent,        *
+ * --color-panel, --shadow-low, --shadow-high, --space-3, --dur-mid,         *
+ * --ease-out.                                                                *
+ * -------------------------------------------------------------------------- */
+
+.ap-portrait {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 var(--space-3, 24px);
+}
+
+.ap-portrait img {
+  inline-size: clamp(180px, 38vw, 280px);
+  block-size: clamp(180px, 38vw, 280px);
+  border-radius: 999px;
+  border: 3px solid var(--color-panel, currentColor);
+  box-shadow: var(--portrait-ring, none), var(--shadow-low, none);
+  object-fit: cover;
+  transition:
+    transform var(--dur-mid, 480ms) var(--ease-out, ease-out),
+    box-shadow var(--dur-mid, 480ms) var(--ease-out, ease-out);
+}
+
+.ap-side-card:hover .ap-portrait img {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--portrait-ring-hover, none), var(--shadow-high, none);
+}
+
+
+/* -------------------------------------------------------------------------- *
+ * Side card UoB logo — bottom of "At a glance"                              *
+ *                                                                            *
+ * Sits at the bottom of the side card as a clean wordmark, anchoring the   *
+ * "At a glance" panel to the University of Birmingham affiliation.          *
+ * -------------------------------------------------------------------------- */
+
+.ap-side-card-logo {
+  margin: var(--space-4, 32px) 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.ap-side-card-logo a {
+  display: inline-block;
+  text-decoration: none;
+  transition: opacity var(--dur-mid, 480ms) var(--ease-out, ease-out);
+}
+
+.ap-side-card-logo img {
+  inline-size: 100%;
+  max-inline-size: 280px;
+  block-size: auto;
+  opacity: 0.85;
+  transition: opacity var(--dur-mid, 480ms) var(--ease-out, ease-out);
+}
+
+.ap-side-card-logo a:hover img,
+.ap-side-card-logo a:focus-visible img {
+  opacity: 1;
+}

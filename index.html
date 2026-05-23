@@ -2,10 +2,778 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Abhinandan Pal (Obi)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Abhinandan Pal · PhD Candidate · Neural Model Checking</title>
+
+  <meta name="description" content="Abhinandan Pal (Obi) is a PhD candidate at the University of Birmingham working on Neural Model Checking with Mirco Giacobbe and Daniel Kröning.">
+
+  <!-- Canonical URL of the deployed site. -->
+  <link rel="canonical" href="https://abhinandan-pal.github.io/">
+
+  <!-- Theme colour matches the resolved --color-bg token in tokens.css. -->
+  <meta name="theme-color" content="#f7f1e6">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Abhinandan Pal · PhD Candidate · Neural Model Checking">
+  <meta property="og:description" content="Abhinandan Pal (Obi) is a PhD candidate at the University of Birmingham working on Neural Model Checking with Mirco Giacobbe and Daniel Kröning.">
+  <meta property="og:url" content="https://abhinandan-pal.github.io/">
+  <meta property="og:image" content="https://abhinandan-pal.github.io/assets/og-image.jpg">
+  <meta property="og:image:alt" content="Portrait of Abhinandan Pal with neural-graph motif.">
+
+  <!-- Twitter Card. -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Abhinandan Pal · PhD Candidate · Neural Model Checking">
+  <meta name="twitter:description" content="Abhinandan Pal (Obi) is a PhD candidate at the University of Birmingham working on Neural Model Checking with Mirco Giacobbe and Daniel Kröning.">
+  <meta name="twitter:image" content="https://abhinandan-pal.github.io/assets/og-image.jpg">
+
+  <!-- Schema.org Person JSON-LD. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Abhinandan Pal",
+    "alternateName": "Obi",
+    "jobTitle": "PhD Candidate",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "University of Birmingham",
+      "url": "https://www.birmingham.ac.uk/"
+    },
+    "url": "https://abhinandan-pal.github.io/",
+    "email": "mailto:a.pal@bham.ac.uk",
+    "sameAs": [
+      "https://www.linkedin.com/in/abhinandan-pal-obi-88788a192/",
+      "https://github.com/Abhinandan-Pal"
+    ]
+  }
+  </script>
+
+  <!-- Favicon — SVG primary with PNG fallback. -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon.png">
+
+  <!--
+    Performance: load DM Sans + Lora from Google Fonts. Once self-hosted
+    WOFF2 files land in /assets/fonts/, the @font-face rules in the inline
+    critical CSS will pick them up; until then the Google Fonts stylesheet
+    provides the fallback.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap">
+
+  <!-- Inline critical CSS — populated at build time by tools/inline-critical.mjs. Left empty here so the source document remains diffable. -->
+  <style id="ap-critical">:root{--color-bg:#f7f1e6;--color-panel:#fdf9f0;--color-panel-opaque:#efe7d6;--color-text:#3a2f23;--color-text-muted:#5a4f3f;--color-text-soft:#8a7f6f;--color-line:#d6c9b3;--color-accent:#7c8a5a;--color-accent-2:#c08a6b;--color-blue:#5e7a8a;--color-focus:#7c8a5a;--color-overlay:rgb(58 47 35 / 50%);--font-sans:'DM Sans','Inter',ui-sans-serif,system-ui,-apple-system,'BlinkMacSystemFont','Segoe UI',sans-serif;--font-serif:'Lora','Fraunces','Cormorant Garamond','Georgia','Times New Roman',serif;--font-bengali:'Noto Sans Bengali','Hind Siliguri','Shree-Lipi','SolaimanLipi',sans-serif;--text-display:clamp(1.95rem,1.4rem+2.2vw,3.1rem);--text-heading:clamp(1.55rem,1.4rem+0.7vw,2.1rem);--text-subheading:clamp(1.06rem,1rem+0.3vw,1.28rem);--text-body:clamp(1rem,0.95rem+0.2vw,1.1rem);--lh-display:0.94;--lh-body:1.62;--ls-display:-0.06em;--measure-body:clamp(38ch,60ch,75ch);--space-1:8px;--space-2:16px;--space-3:24px;--space-4:32px;--space-5:40px;--space-6:48px;--space-7:56px;--space-8:64px;--space-9:72px;--space-10:80px;--space-11:96px;--space-12:120px;--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:999px;--shadow-low:0 6px 14px rgb(58 47 35 / 6%);--shadow-high:0 24px 70px rgb(58 47 35 / 10%);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--ease-spring:cubic-bezier(0.34,1.56,0.64,1);--dur-fast:160ms;--dur-mid:480ms;--dur-slow:1100ms;--reveal-stagger:90ms;--parallax-rate:0.18;--max-content:clamp(1080px,95vw,1200px);--gutter:clamp(16px,4vw,36px);--bp-sm:560px;--bp-md:860px;--bp-lg:1200px;--glass-blur:16px;--glass-alpha:0.55;--glass-border:1px;--glass-fill:color-mix( in srgb,var(--color-panel,#fdf9f0) calc(var(--glass-alpha,0.55) * 100%),transparent )}@media (prefers-reduced-transparency:reduce){:root{--glass-fill:var(--color-panel-opaque,#efe7d6);--glass-blur:0px}}*,*::before,*::after{box-sizing:border-box}body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,figure,blockquote,pre,hr{margin:0;padding:0}body{min-height:100vh;line-height:var(--lh-body,1.62);text-rendering:optimizelegibility}ul[role="list"],ol[role="list"]{list-style:none}img,picture,svg,video,canvas{display:block;max-width:100%;height:auto}input,button,textarea,select{font:inherit;color:inherit}:focus-visible{outline:2px solid var(--color-focus,currentColor);outline-offset:3px}:focus:not(:focus-visible){outline:none}.ap-skip-link{position:absolute;top:-100px;left:var(--space-2,16px);z-index:1000;padding:var(--space-1,8px) var(--space-2,16px);background:var(--color-panel,#fdf9f0);color:var(--color-text,#3a2f23);border-radius:var(--radius-sm,12px);box-shadow:var(--shadow-low,none);text-decoration:none;transition:top 160ms ease-out}.ap-skip-link:focus,.ap-skip-link:focus-visible{top:var(--space-2,16px)}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border-width:0}@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important;scroll-behavior:auto !important}}@font-face{font-family:Lora;src:url('/assets/fonts/Lora-VariableFont.woff2') format('woff2-variations');font-weight:400 700;font-style:normal;font-display:swap}@font-face{font-family:'DM Sans';src:url('/assets/fonts/DMSans-VariableFont.woff2') format('woff2-variations');font-weight:100 1000;font-style:normal;font-display:swap}body{font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:var(--text-body,1rem);line-height:var(--lh-body,1.62);color:var(--color-text,currentColor);background:var(--color-bg,transparent);font-synthesis:none;text-rendering:optimizelegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}p{max-inline-size:var(--measure-body,65ch)}h1,.ap-display{font-family:var(--font-serif,ui-serif,serif);font-size:var(--text-display,3rem);line-height:var(--lh-display,0.94);letter-spacing:var(--ls-display,-0.06em);color:var(--color-text,currentColor);overflow-wrap:break-word}h2,.ap-section-title{font-family:var(--font-serif,ui-serif,serif);font-size:var(--text-heading,2rem);line-height:1.15;letter-spacing:-0.02em;color:var(--color-text,currentColor)}h3,h4,.ap-subheading{font-family:var(--font-sans,ui-sans-serif,sans-serif);font-size:var(--text-subheading,1.15rem);line-height:1.3;color:var(--color-text,currentColor)}:lang(bn){font-family:var(--font-bengali,sans-serif);line-height:1.18;letter-spacing:0}a{color:var(--color-blue,currentColor);text-decoration-line:underline;text-decoration-thickness:from-font;text-underline-offset:0.18em;text-decoration-color:var(--color-blue,currentColor);transition:color var(--dur-fast,160ms) var(--ease-out,ease-out),text-decoration-color var(--dur-fast,160ms) var(--ease-out,ease-out)}a:hover,a:focus-visible{color:var(--color-accent,currentColor);text-decoration-color:var(--color-accent,currentColor);text-decoration-thickness:2px}.ap-eyebrow,.ap-kicker{font-family:var(--font-sans,ui-sans-serif,sans-serif);font-size:var(--text-body,1rem);font-weight:600;line-height:1.2;letter-spacing:0.16em;text-transform:uppercase;color:var(--color-text-soft,currentColor)}.ap-eyebrow+h2,.ap-eyebrow+.ap-section-title,.ap-kicker+h2,.ap-kicker+.ap-section-title{margin-block-start:var(--space-1,8px)}body{overflow-x:hidden;overflow-wrap:break-word;word-break:break-word}.ap-wrap{width:100%;max-width:var(--max-content,1200px);margin-inline:auto;padding-inline:var(--gutter,24px)}.ap-section{padding-block:var(--space-8,64px)}.ap-section-head{display:flex;flex-direction:column;gap:var(--space-2,16px);margin-block-end:var(--space-5,40px)}.ap-hero-grid,.ap-section-card,.ap-two-col,.ap-entry{display:grid;grid-template-columns:1fr;gap:var(--space-4,32px)}.ap-section-card{gap:var(--space-3,24px)}@media (width>= 560px){.ap-actions a,.ap-actions button,.ap-nav-links a,.ap-overlay-links a{min-height:44px;min-width:44px}.ap-two-col{grid-template-columns:1fr 1fr;gap:var(--space-4,32px)}}@media (width>= 860px){.ap-hero-grid{grid-template-columns:1.15fr 0.85fr;gap:var(--space-6,48px);align-items:stretch}.ap-entry{grid-template-columns:minmax(160px,200px) 1fr;gap:var(--space-4,32px);align-items:start}.ap-offset-eyebrow{transform:translateX(calc(var(--space-4,32px) * -1))}.ap-overlap-figure{margin-block-start:calc(var(--space-5,40px) * -1)}.ap-uneven-gutter{padding-inline-start:var(--space-9,72px)}}.ap-hero{position:relative;isolation:isolate;overflow:visible;padding-block:var(--space-11,96px) var(--space-8,64px)}.ap-motif{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:-1}.ap-motif-fallback{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.ap-hero-card{position:relative;z-index:1;background:var(--glass-fill,var(--color-panel,transparent));backdrop-filter:blur(var(--glass-blur,16px)) saturate(120%);-webkit-backdrop-filter:blur(var(--glass-blur,16px)) saturate(120%);border:var(--glass-border,1px) solid var(--color-line,transparent)}.ap-hero-card .ap-lede{margin-block:var(--space-2,16px);max-inline-size:var(--measure-body,65ch);font-size:var(--text-subheading,1.15rem);line-height:var(--lh-body,1.62);color:var(--color-text-muted,currentColor)}.ap-hero-card .ap-lede strong{color:var(--color-text,currentColor);font-weight:700}.ap-bengali{display:block;padding-block-start:var(--space-3,24px);padding-inline:0;margin-inline:0;font-family:var(--font-bengali,sans-serif);color:var(--color-accent,currentColor)}.ap-nickname{display:inline-block;padding-block:var(--space-1,8px);padding-inline:var(--space-2,16px);margin-inline-start:var(--space-2,16px);border-radius:var(--radius-pill,999px);background:var(--color-blue,currentColor);color:var(--color-bg,currentColor);font-family:var(--font-sans,ui-sans-serif,sans-serif);font-size:0.5em;vertical-align:middle;letter-spacing:0.04em}.ap-actions{display:flex;flex-wrap:wrap;gap:var(--space-2,16px);margin-block-start:var(--space-3,24px)}.ap-side-card{position:relative;z-index:1;background:var(--glass-fill,var(--color-panel,transparent));backdrop-filter:blur(var(--glass-blur,16px)) saturate(120%);-webkit-backdrop-filter:blur(var(--glass-blur,16px)) saturate(120%);border:var(--glass-border,1px) solid var(--color-line,transparent);border-radius:var(--radius-lg,28px);box-shadow:var(--shadow-low,none);padding:var(--space-5,40px);color:var(--color-text,currentColor)}@media (width>= 860px){.ap-side-card{padding:var(--space-6,48px)}}.ap-side-card .ap-mini-title{margin-block-end:var(--space-2,16px);font-family:var(--font-serif,ui-serif,serif);font-size:var(--text-subheading,1.15rem);font-size:0.875rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--color-text-soft,currentColor)}.ap-info-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--space-2,16px)}.ap-info-list li{display:grid;grid-template-columns:minmax(90px,max-content) 1fr;gap:var(--space-2,16px);align-items:baseline;min-inline-size:0}.ap-info-list li>:nth-child(2){min-inline-size:0;overflow-wrap:anywhere;word-break:break-word}.ap-info-list a{word-break:break-all}@media (prefers-reduced-transparency:reduce){.ap-hero-card,.ap-side-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--color-panel-opaque,transparent)}}</style>
+
+  <!-- Async stylesheet swap: preload doesn't block render, onload promotes to a real stylesheet. The <noscript> fallback covers JS-disabled visitors. -->
+  <link rel="preload" as="style" href="/styles/main.css" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/styles/main.css"></noscript>
+
+  <script type="module" src="/scripts/main.js" defer></script>
 </head>
 <body>
-  <h1>Abhinandan Pal (Obi)</h1>
-  <p>Personal academic website coming soon.</p>
+  <!-- Full-page generative motif background (fixed, behind all content) -->
+  <canvas class="ap-motif" aria-hidden="true" data-motif data-motif-density="medium"></canvas>
+
+  <!-- Skip link — first focusable element in tab order. -->
+  <a class="ap-skip-link" href="#main">Skip to main content</a>
+
+  <!-- Top-of-page banner: site nav with brand glyph, inline links, and mobile hamburger that opens the dialog overlay. -->
+  <header aria-label="Site">
+    <nav class="ap-nav" aria-label="Primary" data-nav>
+      <a class="ap-brand" href="#top" aria-label="Abhinandan Pal · home">
+        <svg class="ap-mark" aria-hidden="true" focusable="false" viewBox="0 0 64 64" shape-rendering="geometricPrecision" width="28" height="28">
+          <line x1="6" y1="8" x2="20" y2="14" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="20" y1="14" x2="32" y2="6" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="32" y1="6" x2="48" y2="12" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="48" y1="12" x2="58" y2="22" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="20" y1="14" x2="26" y2="32" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="26" y1="32" x2="42" y2="30" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="42" y1="30" x2="48" y2="12" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="26" y1="32" x2="14" y2="44" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="14" y1="44" x2="32" y2="52" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="32" y1="52" x2="50" y2="46" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="50" y1="46" x2="42" y2="30" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <line x1="32" y1="52" x2="38" y2="60" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--color-line, #c9bfb1)" />
+          <circle cx="6" cy="8" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="20" cy="14" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="32" cy="6" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="48" cy="12" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="58" cy="22" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="26" cy="32" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="42" cy="30" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="14" cy="44" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="32" cy="52" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="50" cy="46" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+          <circle cx="38" cy="60" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+        </svg>
+        <span>Abhinandan Pal</span>
+      </a>
+      <button class="ap-hamburger" type="button" aria-controls="ap-overlay" aria-expanded="false" data-nav-toggle>
+        <span class="visually-hidden">Open navigation</span>
+      </button>
+      <ul class="ap-nav-links">
+        <li><a href="#neural-model-checking">Neural Model Checking</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#academic-training">Academic Training</a></li>
+        <li><a href="#research-and-leadership">Research &amp; Leadership</a></li>
+        <li><a href="#awards-and-scholarships">Awards</a></li>
+        <li><a href="#teaching-and-talks">Teaching &amp; Talks</a></li>
+        <li><a href="#academic-service">Academic Service</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <dialog id="ap-overlay" class="ap-overlay" data-nav-overlay aria-label="Primary navigation">
+        <ul class="ap-overlay-links">
+          <li><a href="#neural-model-checking">Neural Model Checking</a></li>
+          <li><a href="#publications">Publications</a></li>
+          <li><a href="#academic-training">Academic Training</a></li>
+          <li><a href="#research-and-leadership">Research &amp; Leadership</a></li>
+          <li><a href="#awards-and-scholarships">Awards</a></li>
+          <li><a href="#teaching-and-talks">Teaching &amp; Talks</a></li>
+          <li><a href="#academic-service">Academic Service</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </dialog>
+    </nav>
+  </header>
+
+  <!-- Hero: name, Bengali script, nickname, role, affiliation, and primary action links. Static HTML so the section is fully readable with JavaScript disabled. The canvas runs the animated motif when JS is available; the SVG fallback is shown otherwise. -->
+  <header class="ap-hero" id="top" aria-label="Hero">
+    <svg class="ap-motif-fallback" aria-hidden="true" hidden viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+    <g opacity="0.35">
+      <line x1="98.46" y1="3.41" x2="16.39" y2="72.93" stroke-width="0.86" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="98.46" y1="3.41" x2="231.33" y2="84.41" stroke-width="0.69" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="98.46" y1="3.41" x2="103.93" y2="146.87" stroke-width="0.45" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="395.14" y1="28.28" x2="532.48" y2="15.36" stroke-width="0.91" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="395.14" y1="28.28" x2="511.44" y2="108.62" stroke-width="0.73" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="395.14" y1="28.28" x2="231.33" y2="84.41" stroke-width="0.72" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="532.48" y1="15.36" x2="511.44" y2="108.62" stroke-width="0.78" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="532.48" y1="15.36" x2="642.63" y2="100.94" stroke-width="0.71" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="783.84" y1="47.78" x2="642.63" y2="100.94" stroke-width="0.79" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="783.84" y1="47.78" x2="811.82" y2="138.29" stroke-width="0.79" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="783.84" y1="47.78" x2="975.66" y2="38.35" stroke-width="0.73" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="975.66" y1="38.35" x2="1025.41" y2="110.63" stroke-width="0.89" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="975.66" y1="38.35" x2="944.86" y2="164.05" stroke-width="0.56" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="16.39" y1="72.93" x2="103.93" y2="146.87" stroke-width="0.82" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="16.39" y1="72.93" x2="231.33" y2="84.41" stroke-width="0.65" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="231.33" y1="84.41" x2="103.93" y2="146.87" stroke-width="0.79" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="511.44" y1="108.62" x2="642.63" y2="100.94" stroke-width="0.94" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="511.44" y1="108.62" x2="512.25" y2="205.69" stroke-width="0.76" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="642.63" y1="100.94" x2="811.82" y2="138.29" stroke-width="0.76" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="811.82" y1="138.29" x2="944.86" y2="164.05" stroke-width="0.91" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1025.41" y1="110.63" x2="1119.06" y2="150.36" stroke-width="0.98" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1025.41" y1="110.63" x2="944.86" y2="164.05" stroke-width="0.95" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="103.93" y1="146.87" x2="17.15" y2="210.40" stroke-width="0.88" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="373.25" y1="184.00" x2="512.25" y2="205.69" stroke-width="0.89" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="373.25" y1="184.00" x2="225.97" y2="243.63" stroke-width="0.75" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="511.44" y1="108.62" x2="373.25" y2="184.00" stroke-width="0.71" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="512.25" y1="205.69" x2="549.11" y2="266.59" stroke-width="0.98" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="512.25" y1="205.69" x2="649.57" y2="205.08" stroke-width="0.92" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="649.57" y1="205.08" x2="549.11" y2="266.59" stroke-width="0.86" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="642.63" y1="100.94" x2="649.57" y2="205.08" stroke-width="0.71" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="944.86" y1="164.05" x2="1119.06" y2="150.36" stroke-width="0.79" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1119.06" y1="150.36" x2="1088.94" y2="240.52" stroke-width="0.79" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="17.15" y1="210.40" x2="225.97" y2="243.63" stroke-width="0.64" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="17.15" y1="210.40" x2="46.95" y2="339.86" stroke-width="0.53" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="225.97" y1="243.63" x2="318.75" y2="300.75" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="549.11" y1="266.59" x2="456.72" y2="341.64" stroke-width="0.81" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="929.49" y1="256.35" x2="969.04" y2="327.12" stroke-width="0.91" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="929.49" y1="256.35" x2="1088.94" y2="240.52" stroke-width="0.83" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="929.49" y1="256.35" x2="790.02" y2="310.90" stroke-width="0.79" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1088.94" y1="240.52" x2="1192.19" y2="317.75" stroke-width="0.77" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="46.95" y1="339.86" x2="74.64" y2="457.96" stroke-width="0.61" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="225.97" y1="243.63" x2="46.95" y2="339.86" stroke-width="0.51" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="318.75" y1="300.75" x2="456.72" y2="341.64" stroke-width="0.85" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="373.25" y1="184.00" x2="318.75" y2="300.75" stroke-width="0.6" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="456.72" y1="341.64" x2="360.62" y2="450.89" stroke-width="0.6" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="790.02" y1="310.90" x2="969.04" y2="327.12" stroke-width="0.77" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="790.02" y1="310.90" x2="660.74" y2="401.73" stroke-width="0.65" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="969.04" y1="327.12" x2="1014.81" y2="399.81" stroke-width="0.89" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1192.19" y1="317.75" x2="1154.40" y2="413.71" stroke-width="0.75" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="969.04" y1="327.12" x2="1192.19" y2="317.75" stroke-width="0.62" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="660.74" y1="401.73" x2="584.45" y2="501.01" stroke-width="0.69" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="456.72" y1="341.64" x2="660.74" y2="401.73" stroke-width="0.58" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1014.81" y1="399.81" x2="1047.96" y2="461.25" stroke-width="0.98" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1014.81" y1="399.81" x2="901.37" y2="441.01" stroke-width="0.92" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1014.81" y1="399.81" x2="1154.40" y2="413.71" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1154.40" y1="413.71" x2="1047.96" y2="461.25" stroke-width="0.91" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="74.64" y1="457.96" x2="3.93" y2="523.33" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="74.64" y1="457.96" x2="263.38" y2="540.64" stroke-width="0.54" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="360.62" y1="450.89" x2="467.09" y2="481.84" stroke-width="0.98" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="360.62" y1="450.89" x2="263.38" y2="540.64" stroke-width="0.71" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="467.09" y1="481.84" x2="584.45" y2="501.01" stroke-width="0.97" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="467.09" y1="481.84" x2="263.38" y2="540.64" stroke-width="0.59" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="901.37" y1="441.01" x2="1047.96" y2="461.25" stroke-width="0.87" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="969.04" y1="327.12" x2="901.37" y2="441.01" stroke-width="0.61" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1047.96" y1="461.25" x2="1062.49" y2="540.01" stroke-width="0.87" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="3.93" y1="523.33" x2="83.16" y2="628.57" stroke-width="0.65" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="3.93" y1="523.33" x2="263.38" y2="540.64" stroke-width="0.49" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="263.38" y1="540.64" x2="357.08" y2="590.75" stroke-width="0.93" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="584.45" y1="501.01" x2="752.07" y2="531.60" stroke-width="0.78" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="752.07" y1="531.60" x2="640.59" y2="613.61" stroke-width="0.73" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="752.07" y1="531.60" x2="931.87" y2="577.63" stroke-width="0.7" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1062.49" y1="540.01" x2="1197.40" y2="565.96" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1062.49" y1="540.01" x2="931.87" y2="577.63" stroke-width="0.88" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="263.38" y1="540.64" x2="83.16" y2="628.57" stroke-width="0.54" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="83.16" y1="628.57" x2="357.08" y2="590.75" stroke-width="0.41" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="467.09" y1="481.84" x2="357.08" y2="590.75" stroke-width="0.58" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="360.62" y1="450.89" x2="357.08" y2="590.75" stroke-width="0.47" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="584.45" y1="501.01" x2="640.59" y2="613.61" stroke-width="0.63" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="357.08" y1="590.75" x2="640.59" y2="613.61" stroke-width="0.4" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1047.96" y1="461.25" x2="931.87" y2="577.63" stroke-width="0.53" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="1047.96" y1="461.25" x2="1197.40" y2="565.96" stroke-width="0.53" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="931.87" y1="577.63" x2="1197.40" y2="565.96" stroke-width="0.47" style="stroke: var(--color-line, #c9bfb1)" />
+      <circle cx="98.46" cy="3.41" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="395.14" cy="28.28" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="532.48" cy="15.36" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="783.84" cy="47.78" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="975.66" cy="38.35" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="16.39" cy="72.93" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="231.33" cy="84.41" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="511.44" cy="108.62" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="642.63" cy="100.94" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="811.82" cy="138.29" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1025.41" cy="110.63" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="103.93" cy="146.87" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="373.25" cy="184.00" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="512.25" cy="205.69" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="649.57" cy="205.08" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="944.86" cy="164.05" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1119.06" cy="150.36" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="17.15" cy="210.40" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="225.97" cy="243.63" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="549.11" cy="266.59" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="929.49" cy="256.35" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1088.94" cy="240.52" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="46.95" cy="339.86" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="318.75" cy="300.75" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="456.72" cy="341.64" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="790.02" cy="310.90" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="969.04" cy="327.12" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1192.19" cy="317.75" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="660.74" cy="401.73" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1014.81" cy="399.81" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1154.40" cy="413.71" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="74.64" cy="457.96" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="360.62" cy="450.89" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="467.09" cy="481.84" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="901.37" cy="441.01" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1047.96" cy="461.25" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="3.93" cy="523.33" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="263.38" cy="540.64" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="584.45" cy="501.01" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="752.07" cy="531.60" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1062.49" cy="540.01" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="83.16" cy="628.57" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="357.08" cy="590.75" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="640.59" cy="613.61" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="931.87" cy="577.63" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="1197.40" cy="565.96" r="2" style="fill: var(--color-accent-2, #c98c5a)" />
+    </g>
+  </svg>
+
+    <div class="ap-wrap">
+      <div class="ap-hero-grid">
+        <section class="ap-card ap-hero-card" aria-labelledby="ap-name">
+          <p class="ap-kicker">
+            <span class="ap-dot" aria-hidden="true"></span>
+            PhD Candidate · Computer Science
+          </p>
+          <h1 class="ap-display ap-title" id="ap-name" data-kinetic>
+            <span lang="en">Abhinandan Pal</span><br>
+            <span class="ap-bengali" lang="bn">অভিনন্দন পাল</span>
+            <span class="ap-nickname">Obi</span>
+          </h1>
+          <p class="ap-lede">
+            Originally from <strong>Chinsurah</strong>, West Bengal, India, I am pursuing my PhD in the <a href="https://www.birmingham.ac.uk/research/centres-institutes/research-in-computer-science/theory-of-computation"><strong>Theory of Computer Science</strong></a> at the University of Birmingham, under the supervision of <a href="https://mircogiacobbe.github.io/"><strong>Mirco Giacobbe (Primary)</strong></a> and <a href="https://www.kroening.com/"><strong>Daniel Kröning (Industry)</strong></a>. My PhD topic is <strong>Neural Model Checking</strong>.
+          </p>
+          <p class="ap-lede">
+            Prior to this, I completed my undergraduate studies at the Indian Institute of Information Technology Kalyani, where I received the President of India Gold Medal and the department's first prize. During this period, I had the privilege of engaging in research at École Normale Supérieure Ulm, Università degli Studi di Padova, and École Normale Supérieure Paris-Saclay.
+          </p>
+          <nav class="ap-actions" aria-label="Profile links">
+            <a class="ap-button primary" href="mailto:a.pal@bham.ac.uk" data-magnetic>Email</a>
+            <a class="ap-button" href="https://scholar.google.com/citations?user=w7_c_0YAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer" data-magnetic>Scholar</a>
+            <a class="ap-button" href="https://www.linkedin.com/in/abhinandan-pal-obi-88788a192/" target="_blank" rel="noopener noreferrer" data-magnetic>LinkedIn</a>
+            <a class="ap-button" href="https://github.com/Abhinandan-Pal" target="_blank" rel="noopener noreferrer" data-magnetic>GitHub</a>
+          </nav>
+        </section>
+
+        <aside class="ap-card ap-side-card" aria-label="At a glance">
+          <figure class="ap-portrait">
+            <img
+              src="/assets/img/profile.jpg"
+              alt="Portrait of Abhinandan Pal"
+              width="240"
+              height="240"
+              loading="eager"
+              decoding="async">
+          </figure>
+          <h2 class="ap-mini-title">At a glance</h2>
+          <ul class="ap-info-list">
+            <li><span class="ap-meta">Current affiliation</span> School of Computer Science, University of Birmingham</li>
+            <li><span class="ap-meta">Group</span> Theory of Computer Science</li>
+            <li><span class="ap-meta">Supervision</span> Mirco Giacobbe · Daniel Kröning</li>
+            <li><span class="ap-meta">Previous affiliations</span> Amazon · NII Tokyo · ENS Paris · IIIT Kalyani</li>
+            <li><span class="ap-meta">Contact</span> <a href="mailto:a.pal@bham.ac.uk">a.pal@bham.ac.uk</a><br><a href="mailto:abhinandan.mike123@gmail.com">abhinandan.mike123@gmail.com</a></li>
+          </ul>
+          <figure class="ap-side-card-logo">
+            <a href="https://www.birmingham.ac.uk/" aria-label="University of Birmingham">
+              <img src="/assets/img/logos/university-of-birmingham-logo.png" alt="University of Birmingham" loading="lazy" decoding="async">
+            </a>
+          </figure>
+        </aside>
+      </div>
+    </div>
+    <!-- 1-px sentinel below the hero. nav.js watches it via IntersectionObserver to toggle [data-stuck] on the nav once the hero scrolls past, switching the nav into its pinned glass treatment. -->
+    <div class="ap-nav-sentinel" data-nav-sentinel aria-hidden="true"></div>
+  </header>
+
+  <!-- Eight content sections in document order. Each carries a unique id matching its nav fragment, the data-reveal hook for staggered fade-in, and the canonical `.ap-wrap > .ap-section-head + .ap-card.ap-section-card` shell so every section shares the editorial type rhythm and the frosted-glass section surface. Two sections (#publications and #research-and-leadership) carry editorial offsets at >= --bp-md to break the centred rhythm. -->
+  <main id="main">
+
+    <!-- 1. Research / Neural Model Checking — opens the editorial spread
+         with an explanatory note that frames the rest of the page. -->
+    <section class="ap-section" id="neural-model-checking" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head">
+          <p class="ap-section-eyebrow">RESEARCH</p>
+          <h2 class="ap-section-title">Neural Model Checking</h2>
+          <p class="ap-section-note">What I work on, in two paragraphs.</p>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-content">
+              <p>My PhD work develops <strong>neural model checking</strong>, a framework for temporal-logic model checking that uses neural networks as formal proof certificates for both safety and liveness. Certificates are learned from executions of the system and then validated by symbolic checking based on satisfiability solving. An accepted certificate is therefore a sound proof of correctness.</p>
+              <p>Checking a candidate certificate is often much easier than synthesising one. We design neural architectures that can be trained by constraint solvers, making the learning procedure unsupervised, formally sound, and practically effective. On textbook-level hardware designs with rich linear-temporal-logic specifications, the approach verifies liveness and combined safety-liveness properties with orders-of-magnitude speedups over strong model-checking baselines.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Writing / Publications — editorial offset #1 (`.ap-offset-eyebrow`,
+         ≥ 24 px translateX into the left gutter ≥ --bp-md). -->
+    <section class="ap-section" id="publications" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head ap-offset-eyebrow">
+          <p class="ap-section-eyebrow">WRITING</p>
+          <h2 class="ap-section-title">Publications</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">NeurIPS&apos;25</div>
+            <div class="ap-entry-content">
+              <h3>Let a Neural Network be Your Invariant</h3>
+              <p class="ap-entry-meta">Mirco Giacobbe, Daniel Kröning, Abhinandan Pal, Michael Tautschnig <strong>(alphabetical)</strong></p>
+              <p class="ap-entry-meta">In Advances in Neural Information Processing Systems 38 (NeurIPS 2025), December 2-7, 2025, San Diego, USA.</p>
+              <div class="ap-entry-links">
+                <a class="ap-chip-link" href="https://openreview.net/forum?id=qBPb7g1SEa">Paper</a>
+              </div>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">NeurIPS&apos;24</div>
+            <div class="ap-entry-content">
+              <h3>Neural Model Checking</h3>
+              <p class="ap-entry-meta">Mirco Giacobbe, Daniel Kröning, Abhinandan Pal, Michael Tautschnig <strong>(alphabetical)</strong></p>
+              <p class="ap-entry-meta">In Advances in Neural Information Processing Systems 37 (NeurIPS 2024), December 9-15, 2024, Vancouver, Canada.</p>
+              <div class="ap-entry-links">
+                <a class="ap-chip-link" href="https://openreview.net/forum?id=dJ9KzkQ0oH">Paper</a>
+              </div>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">VMCAI&apos;24</div>
+            <div class="ap-entry-content">
+              <h3>Abstract Interpretation-Based Feature Importance for Support Vector Machines</h3>
+              <p class="ap-entry-meta"><strong>Abhinandan Pal</strong>, Francesco Ranzato, Caterina Urban, Marco Zanella</p>
+              <p class="ap-entry-meta">In International Conference on Verification, Model Checking, and Abstract Interpretation, January 15-16, 2024, London, United Kingdom.</p>
+              <div class="ap-entry-links">
+                <a class="ap-chip-link" href="https://inria.hal.science/hal-04378817/document">Paper</a>
+              </div>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">POPL SRC&apos;24</div>
+            <div class="ap-entry-content">
+              <h3>PiR (πr): Probabilistic Interpretation of Robustness</h3>
+              <p class="ap-entry-meta"><strong>Abhinandan Pal</strong></p>
+              <p class="ap-entry-meta">Extended Abstract for the Student Research Competition track of the 51st ACM SIGPLAN Symposium on Principles of Programming Languages, January 14–20, 2024, London, United Kingdom.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">SPLASH SRC&apos;22</div>
+            <div class="ap-entry-content">
+              <h3>Qiwi: A Beginner Friendly Quantum Language</h3>
+              <p class="ap-entry-meta"><strong>Abhinandan Pal</strong>, Anubhab Ghosh</p>
+              <p class="ap-entry-meta">In Companion Proceedings of the 2022 ACM SIGPLAN International Conference on Systems, Programming, Languages, and Applications: Software for Humanity, December 5–10, 2022, Auckland, New Zealand.</p>
+              <div class="ap-entry-links">
+                <a class="ap-chip-link" href="https://dl.acm.org/doi/abs/10.1145/3563768.3563959">Paper</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Education / Academic Training. -->
+    <section class="ap-section" id="academic-training" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head">
+          <p class="ap-section-eyebrow">EDUCATION</p>
+          <h2 class="ap-section-title">Academic Training</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Sep 2023 – Sep 2027</div>
+            <div class="ap-entry-content">
+              <h3>PhD, School of Computer Science</h3>
+              <p class="ap-entry-meta">University of Birmingham · Birmingham, UK</p>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/birmingham.png" alt="University of Birmingham logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Aug 2019 – Jul 2023</div>
+            <div class="ap-entry-content">
+              <h3>B.Tech. Computer Science and Engineering</h3>
+              <p class="ap-entry-meta">IIIT Kalyani · Kalyani, India</p>
+              <ul class="ap-entry-bullets">
+                <li>CGPA 9.95 (Department Rank 1).</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/iiit-kalyani.png" alt="IIIT Kalyani logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Apr 2010 – Apr 2019</div>
+            <div class="ap-entry-content">
+              <h3>Indian School Certificate Examinations</h3>
+              <p class="ap-entry-meta">Don Bosco School Bandel · Hooghly, India</p>
+              <ul class="ap-entry-bullets">
+                <li>ICSE 2017 — 94%.</li>
+                <li>ISC 2019 — 95.25%.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/don-bosco-bandel.jpg" alt="Don Bosco School Bandel logo" loading="lazy" decoding="async">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Experience / Research & Leadership — editorial offset #2
+         (`.ap-uneven-gutter`, ≥ 24 px padding-inline-start ≥ --bp-md). -->
+    <section class="ap-section" id="research-and-leadership" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head ap-uneven-gutter">
+          <p class="ap-section-eyebrow">EXPERIENCE</p>
+          <h2 class="ap-section-title">Research &amp; Leadership</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Nov 2025 – Jan 2026</div>
+            <div class="ap-entry-content">
+              <h3>Applied Science Intern</h3>
+              <p class="ap-entry-meta">Amazon New York · USA</p>
+              <ul class="ap-entry-bullets">
+                <li>Team: Security.</li>
+                <li>Building language-agnostic declarative rule matching at industrial scale.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/amazon.png" alt="Amazon logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Mar 2025 – Jul 2025</div>
+            <div class="ap-entry-content">
+              <h3>Research Intern</h3>
+              <p class="ap-entry-meta">National Institute of Informatics Tokyo · Japan</p>
+              <ul class="ap-entry-bullets">
+                <li>Advisor: Dr. Taro Sekiyama.</li>
+                <li>Extending neural model checking to software verification.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/nii.png" alt="National Institute of Informatics logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Nov 2022 – Apr 2023</div>
+            <div class="ap-entry-content">
+              <h3>Research Intern</h3>
+              <p class="ap-entry-meta">École Normale Supérieure Paris · in-person/remote</p>
+              <ul class="ap-entry-bullets">
+                <li>Advisor: Dr. Caterina Urban.</li>
+                <li>Verifying attention robustness of CNNs using abstract interpretation.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/ens-paris.png" alt="École Normale Supérieure Paris logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">May 2022 – Jul 2022</div>
+            <div class="ap-entry-content">
+              <h3>Research Intern</h3>
+              <p class="ap-entry-meta">Università degli Studi di Padova · remote</p>
+              <ul class="ap-entry-bullets">
+                <li>Advisors: Dr. Caterina Urban, Prof. Francesco Ranzato, Dr. Marco Zanella.</li>
+                <li>Developing feature ranking and fairness analysis of SVMs using abstract interpretation.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/unipd.png" alt="University of Padova logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Nov 2021 – Jan 2022</div>
+            <div class="ap-entry-content">
+              <h3>Research Intern</h3>
+              <p class="ap-entry-meta">École Normale Supérieure · remote</p>
+              <ul class="ap-entry-bullets">
+                <li>Advisor: Dr. Caterina Urban.</li>
+                <li>Redesigning a static analysis for certifying fairness of neural networks, exploiting GPU parallelism.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/ens-paris.png" alt="École Normale Supérieure logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Jun 2021 – Jul 2021</div>
+            <div class="ap-entry-content">
+              <h3>Research Intern</h3>
+              <p class="ap-entry-meta">École Normale Supérieure Paris-Saclay · remote</p>
+              <ul class="ap-entry-bullets">
+                <li>Advisor: Prof. Mihaela Sighireanu.</li>
+                <li>Developing specification-based tests for POSIX utilities manipulating the file system.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/ens-paris-saclay.png" alt="École Normale Supérieure Paris-Saclay logo" loading="lazy" decoding="async">
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Aug 2021 – Nov 2022</div>
+            <div class="ap-entry-content">
+              <h3>General Secretary Technology</h3>
+              <p class="ap-entry-meta">IIIT Kalyani Student Council · India</p>
+              <ul class="ap-entry-bullets">
+                <li>Launching new technical clubs and regular events, several focused on student well-being during the pandemic.</li>
+              </ul>
+            </div>
+            <img class="ap-entry-logo" src="/assets/img/logos/iiit-kalyani.png" alt="IIIT Kalyani logo" loading="lazy" decoding="async">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Recognition / Awards & Scholarships. -->
+    <section class="ap-section" id="awards-and-scholarships" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head">
+          <p class="ap-section-eyebrow">RECOGNITION</p>
+          <h2 class="ap-section-title">Awards &amp; Scholarships</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Dec 2023</div>
+            <div class="ap-entry-content">
+              <h3>President of India Gold Medal</h3>
+              <p>Awarded for academic excellence to one student at each INI (IIT, IIIT, NIT, etc.).</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Jun 2023</div>
+            <div class="ap-entry-content">
+              <h3>ENS Saclay Master&apos;s Scholarship</h3>
+              <p>Awarded; declined to pursue PhD.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Mar 2023</div>
+            <div class="ap-entry-content">
+              <h3>ENS Lyon Master&apos;s Scholarship</h3>
+              <p>Awarded; declined to pursue PhD.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Dec 2022</div>
+            <div class="ap-entry-content">
+              <h3>ACM SRC Bronze Medal at SPLASH&apos;22</h3>
+              <p>Bronze medal in the ACM Student Research Competition at SPLASH 2022 for Qiwi: A Beginner Friendly Quantum Language.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Teaching / Teaching & Talks. -->
+    <section class="ap-section" id="teaching-and-talks" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head">
+          <p class="ap-section-eyebrow">TEACHING</p>
+          <h2 class="ap-section-title">Teaching &amp; Talks</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Autumn 2025</div>
+            <div class="ap-entry-content">
+              <h3>Invited Talk</h3>
+              <p class="ap-entry-meta">New York University, Princeton University, University of Illinois Urbana-Champaign, Mitsubishi Electric Research Laboratories</p>
+              <p>Invited talk on Neural Model Checking.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Spring 2025</div>
+            <div class="ap-entry-content">
+              <h3>Invited Talk</h3>
+              <p class="ap-entry-meta">University of Edinburgh, University of Bristol, Imperial College London</p>
+              <p>Invited talk on Neural Model Checking.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Spring 2024</div>
+            <div class="ap-entry-content">
+              <h3>Invited Talk</h3>
+              <p class="ap-entry-meta">University of Oxford</p>
+              <p>Invited talk on Abstract Interpretation-Based Feature Importance for Support Vector Machines.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Spring 2024</div>
+            <div class="ap-entry-content">
+              <h3>Team Project (BSc CS, year 2)</h3>
+              <p class="ap-entry-meta">University of Birmingham</p>
+              <p>Postgraduate Teaching Assistant.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Spring 2024</div>
+            <div class="ap-entry-content">
+              <h3>Data Structures and Algorithms (Conversion MSc CS)</h3>
+              <p class="ap-entry-meta">University of Birmingham</p>
+              <p>Postgraduate Teaching Assistant.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Autumn 2023</div>
+            <div class="ap-entry-content">
+              <h3>Computer-Aided Verification (BSc/MSci CS, years 3 and 4)</h3>
+              <p class="ap-entry-meta">University of Birmingham</p>
+              <p>Postgraduate Teaching Assistant.</p>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">Spring 2023</div>
+            <div class="ap-entry-content">
+              <h3>Antique Seminar</h3>
+              <p class="ap-entry-meta">École Normale Supérieure</p>
+              <p>Research seminar talk at ENS.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Service / Academic Service. -->
+    <section class="ap-section" id="academic-service" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head">
+          <p class="ap-section-eyebrow">SERVICE</p>
+          <h2 class="ap-section-title">Academic Service</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">2025</div>
+            <div class="ap-entry-content">
+              <h3>General Chair, BASiC&apos;25</h3>
+              <ul class="ap-entry-bullets">
+                <li>Chairing the Birmingham Algorithms, Synthesis, and Computability seminar series.</li>
+              </ul>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">2024–present</div>
+            <div class="ap-entry-content">
+              <h3>PGR Representative, UoB CS Research Committee</h3>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">2024</div>
+            <div class="ap-entry-content">
+              <h3>Artifact Evaluation Committee Member</h3>
+              <ul class="ap-entry-bullets">
+                <li>CAV&apos;24, SAS&apos;24, ECOOP&apos;24.</li>
+              </ul>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">2024–present</div>
+            <div class="ap-entry-content">
+              <h3>Mentor, SIGPLAN-M</h3>
+            </div>
+          </article>
+          <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+            <div class="ap-entry-date">2023</div>
+            <div class="ap-entry-content">
+              <h3>Student Volunteer, CIKM&apos;23</h3>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Get in touch / Contact — closes the document body. -->
+    <section class="ap-section" id="contact" data-reveal>
+      <div class="ap-wrap">
+        <header class="ap-section-head">
+          <p class="ap-section-eyebrow">GET IN TOUCH</p>
+          <h2 class="ap-section-title">Contact</h2>
+        </header>
+        <div class="ap-card ap-section-card">
+          <div class="ap-two-col">
+            <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+              <div class="ap-entry-content">
+                <h3>Email</h3>
+                <p><a href="mailto:a.pal@bham.ac.uk">a.pal@bham.ac.uk</a></p>
+                <p class="ap-entry-meta">Primary academic email</p>
+                <p><a href="mailto:abhinandan.mike123@gmail.com">abhinandan.mike123@gmail.com</a></p>
+                <p class="ap-entry-meta">Personal email</p>
+              </div>
+            </article>
+            <article class="ap-entry" data-reveal-child data-spotlight data-magnetic>
+              <div class="ap-entry-content">
+                <h3>Online</h3>
+                <p><a href="https://www.linkedin.com/in/abhinandan-pal-obi-88788a192/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+                <p><a href="https://github.com/Abhinandan-Pal" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer: copyright line, brand mark, and last-updated stamp. The data-year and time[data-updated] elements ship with static fallbacks so the no-JS path stays correct; render.js rewrites them at runtime. -->
+  <footer class="ap-footer">
+    <p>© <span data-year>2025</span> Abhinandan Pal</p>
+    <svg class="ap-mark" aria-hidden="true" focusable="false" viewBox="0 0 64 64" width="28" height="28">
+      <line x1="6" y1="8" x2="20" y2="14" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="20" y1="14" x2="32" y2="6" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="32" y1="6" x2="48" y2="12" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="48" y1="12" x2="58" y2="22" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="20" y1="14" x2="26" y2="32" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="26" y1="32" x2="42" y2="30" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="42" y1="30" x2="48" y2="12" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="26" y1="32" x2="14" y2="44" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="14" y1="44" x2="32" y2="52" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="32" y1="52" x2="50" y2="46" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="50" y1="46" x2="42" y2="30" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <line x1="32" y1="52" x2="38" y2="60" stroke-width="0.9" style="stroke: var(--color-line, #c9bfb1)" />
+      <circle cx="6" cy="8" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="20" cy="14" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="32" cy="6" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="48" cy="12" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="58" cy="22" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="26" cy="32" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="42" cy="30" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="14" cy="44" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="32" cy="52" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="50" cy="46" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+      <circle cx="38" cy="60" r="1.6" style="fill: var(--color-accent-2, #c98c5a)" />
+    </svg>
+    <p class="ap-footer-meta">Last updated <time data-updated datetime="2025-12-01">2025-12-01</time></p>
+  </footer>
 </body>
 </html>

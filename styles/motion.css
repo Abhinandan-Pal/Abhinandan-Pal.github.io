@@ -1,0 +1,255 @@
+/**
+ * styles/motion.css
+ *
+ * The animation system's CSS surface for the website.
+ *
+ * This stylesheet does not paint colour or set fonts; it only declares
+ * transforms, opacity transitions, scroll-driven keyframes, and the
+ * reduced-motion fallbacks. The workspace-local `local/token-only-paint`
+ * Stylelint rule therefore has nothing to flag here — the watched
+ * properties (colour, background, background-color, border-color,
+ * box-shadow, font-family) are not used. `mask-image` carries colour stops
+ * inside a gradient but is intentionally NOT in the rule's watch list.
+ *
+ * Design references
+ *   •
+ *   •
+ *
+ *   •   — motion suppression under reduced-motion (no replay)
+ *   •   — reveal animations finish within bounded budgets
+ *   •      — staggered fade-and-translate reveal of section
+ *                   children (300–600 ms duration, 60–120 ms inter-child
+ *                   stagger), driven by `.is-visible` toggled on the
+ *                   parent `[data-reveal]`.
+ *   •      — vertical parallax on the motif background,
+ *                   bound to `--ap-motif-y` written by parallax.js with
+ *                   coefficient `--parallax-rate`.
+ *   •      — every individual reveal animation completes within
+ *                   800 ms of its trigger.
+ *   •      — reduced-motion disables parallax, magnetic, kinetic
+ *                   typography, and translate reveals, replacing them
+ *                   with opacity-only fades ≤ 150 ms or immediate state.
+ *   •     — once revealed, a section does not replay its
+ *                   reveal animation on re-entry. (`will-change` cleanup
+ *                   is handled by reveal.js; CSS itself does not retrigger
+ *                   because state lives on `[data-reveal].is-visible`.)
+ *   •      — at least one section transition spans a continuous
+ *                   ≥ 80 px scroll band using `clip-path` + CSS `mask` +
+ *                   opacity. We use scroll-driven animations where
+ *                   supported and a JS-driven `--ap-progress` fallback
+ *                   otherwise (transitions.js).
+ *   •     — ornamental motion is implemented through design system
+ *                   tokens; every duration / easing / stagger / parallax
+ *                   coefficient resolves through `var(--…)`.
+ *
+ * Token consumers (every reference is `var(--name, <fallback>)`)
+ *   • --dur-mid          (480 ms)  reveal + hero choreography duration
+ *   • --dur-fast         (160 ms)  hover micro-interaction duration
+ *   • --reveal-stagger   (90 ms)   inter-child stagger delay
+ *   • --ease-out         (cubic-bezier(0.2, 0.8, 0.2, 1))
+ *   • --parallax-rate    (0.18)    scroll-coefficient (consumed by JS)
+ *
+ * Runtime contract
+ *   • parallax.js writes `--ap-motif-y` in CSS pixels (e.g. `12px`) on the
+ *     element carrying the `.ap-motif` class.
+ *   • transitions.js writes `--ap-progress` (0..1, unit-less) on each
+ *     `[data-reveal]` and adds `data-progress` so the CSS rule activates.
+ *   • reveal.js toggles `.is-visible` on `[data-reveal]` and writes
+ *     `--reveal-index` on each `[data-reveal-child]`.
+ *   • main.js toggles `.is-loaded` on `.ap-hero` once the entrance
+ *     sequence is allowed to start.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. Reveal — initial state                             *
+ *                                                                            *
+ * `[data-reveal-child]` starts at opacity 0 and offset by 16 px on the y     *
+ * axis. The transition is opacity + transform on `--dur-mid` with the        *
+ * editorial `--ease-out` curve. The per-child stagger is computed in CSS     *
+ * from `--reveal-index` (written by render.js / reveal.js) multiplied by     *
+ * `--reveal-stagger`, so the JS does not need to manually space children.    *
+ * `will-change` is set on the two animated properties only; reveal.js       *
+ * clears it after the transition ends so re-revealed sections do not retain  *
+ * compositor layers indefinitely (memory hygiene,  reinforcement).   *
+ * -------------------------------------------------------------------------- */
+
+[data-reveal-child] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--dur-mid, 480ms) var(--ease-out, ease-out),
+    transform var(--dur-mid, 480ms) var(--ease-out, ease-out);
+  transition-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger, 90ms));
+  will-change: opacity, transform;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. Reveal — final state                                          *
+ *                                                                            *
+ * The state is owned by `[data-reveal].is-visible`; CSS reads the parent     *
+ * class and applies the destination values to every descendant child. Once   *
+ * `.is-visible` is set the reveal cannot retrigger because the    *
+ * IO unobserves the section.                                                 *
+ * -------------------------------------------------------------------------- */
+
+[data-reveal].is-visible [data-reveal-child] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. Parallax binding                                              *
+ *                                                                            *
+ * parallax.js writes `--ap-motif-y` (in CSS pixels) on the element carrying  *
+ * the `.ap-motif` class once per `requestAnimationFrame` tick. The actual   *
+ * scroll-coefficient is `--parallax-rate` (0.18) and is applied JS-side; CSS *
+ * only consumes the pre-multiplied offset. `translate3d` keeps the element   *
+ * on its own compositor layer so the paint cost is zero per frame.           *
+ * -------------------------------------------------------------------------- */
+
+.ap-motif {
+  /* Fixed full-page background — no parallax transform needed */
+  will-change: auto;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. Hero entrance choreography                                    *
+ *                                                                            *
+ * Hero card and side "At a glance" card start one tick below their resting  *
+ * position with opacity 0. main.js toggles `.is-loaded` on the hero element *
+ * after `DOMContentLoaded`; both cards arrive within 1500 ms total because   *
+ * the side card's transition-delay (280 ms) plus the transition duration    *
+ * (`--dur-mid`, 480 ms) sums to ~760 ms — well inside budget.                *
+ * -------------------------------------------------------------------------- */
+
+.ap-hero-card,
+.ap-side-card {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--dur-mid, 480ms) var(--ease-out, ease-out),
+    transform var(--dur-mid, 480ms) var(--ease-out, ease-out);
+}
+
+.ap-hero.is-loaded .ap-hero-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 80ms;
+}
+
+.ap-hero.is-loaded .ap-side-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 280ms;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. Section transition — scroll-driven                      *
+ *                                                                            *
+ * Browsers that implement `animation-timeline: view` get a free, GPU-      *
+ * accelerated reveal that progresses continuously as each `[data-reveal]`    *
+ * crosses the viewport. The animation-range `cover 0% cover 30%` means the   *
+ * reveal completes once 30 % of the section has entered the viewport — for  *
+ * any section taller than ~270 px (every section is taller than     *
+ * `--space-10`, 80 px) the reveal band exceeds the 80 px minimum required   *
+ * by . The keyframes combine `clip-path`, `mask-image`, and opacity  *
+ * to satisfy the requirement's "clip-path, CSS mask, or scroll-linked       *
+ * opacity reveal" clause.                                                   *
+ * -------------------------------------------------------------------------- */
+
+@supports (animation-timeline: view()) {
+  [data-reveal] {
+    animation: ap-section-enter linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 30%;
+  }
+
+  @keyframes ap-section-enter {
+    from {
+      opacity: 0.4;
+      clip-path: inset(0 0 100% 0);
+      mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    }
+
+    to {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+      mask-image: linear-gradient(to bottom, black 100%, transparent 100%);
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 6. Section transition — JS-driven fallback                 *
+ *                                                                            *
+ * When scroll-driven animations are not supported, transitions.js installs   *
+ * an IntersectionObserver-fed scroll handler that writes `--ap-progress` and *
+ * adds the `data-progress` attribute on each `[data-reveal]`. The CSS rule  *
+ * then derives the same clip-path / opacity pair from that single scalar,   *
+ * preserving the continuous ≥ 80 px reveal band promised by . The   *
+ * `data-progress` attribute is the activation gate: until JS opts in, the   *
+ * section keeps its natural appearance.                                      *
+ * -------------------------------------------------------------------------- */
+
+@supports not (animation-timeline: view()) {
+  [data-reveal][data-progress] {
+    clip-path: inset(0 0 calc((1 - var(--ap-progress, 1)) * 100%) 0);
+    opacity: calc(0.4 + 0.6 * var(--ap-progress, 1));
+  }
+}
+
+/* -------------------------------------------------------------------------- *
+ * 7. reduced-motion override                 *
+ *                                                                            *
+ * Under `prefers-reduced-motion: reduce`, every transform-bearing animation  *
+ * collapses to either an immediate state change or an opacity-only fade no   *
+ * longer than 150 ms. We:                                                    *
+ *   • strip the translate from `[data-reveal-child]` and shorten the         *
+ *     transition to `opacity 150ms linear` with no stagger delay;            *
+ *   • still toggle the final opacity on `.is-visible` so revealed text       *
+ *     becomes visible (says "immediate state changes or opacity-     *
+ *     only fades", not "no reveal at all");                                  *
+ *   • neutralise the parallax binding (`.ap-motif` returns to identity);     *
+ *   • render the hero cards at their final state instantly;        *
+ *   • disable the scroll-driven `animation-timeline` keyframe entirely;      *
+ *   • neutralise the JS-driven fallback by clearing `clip-path` and forcing  *
+ *     opacity 1, so transitions.js's progress writes have no visible effect. *
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-child] {
+    opacity: 0;
+    transform: none;
+    transition: opacity 150ms linear;
+    transition-delay: 0s;
+    will-change: auto;
+  }
+
+  [data-reveal].is-visible [data-reveal-child] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ap-motif {
+    transform: none;
+    will-change: auto;
+  }
+
+  .ap-hero-card,
+  .ap-side-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Strip the scroll-driven section-transition animation. */
+  [data-reveal] {
+    animation: none;
+  }
+
+  /* Neutralise the JS-driven fallback. */
+  [data-reveal][data-progress] {
+    clip-path: none;
+    opacity: 1;
+  }
+}

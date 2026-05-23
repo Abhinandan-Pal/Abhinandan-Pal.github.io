@@ -1,0 +1,125 @@
+/**
+ * styles/reset.css
+ *
+ * Modern, minimal CSS reset for the website.
+ *
+ *             (skip-to-main link as first focusable, visible on focus).
+ *
+ * All paint values reference design system tokens via `var(--…)` so that the
+ * workspace-local Stylelint rule `local/token-only-paint` passes.
+ */
+
+/* Box-sizing reset. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margins and padding from common block elements. */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+dl,
+figure,
+blockquote,
+pre,
+hr {
+  margin: 0;
+  padding: 0;
+}
+
+/* Body baseline — documented line-height, full-viewport min height. */
+body {
+  min-height: 100vh;
+  line-height: var(--lh-body, 1.62);
+  text-rendering: optimizelegibility;
+}
+
+/* Lists explicitly marked role="list" drop bullets. */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Media — `height: auto` defers to width/height attributes. */
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Form controls inherit surrounding type and colour. */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Visible focus ring — 2 px solid, 3 px offset, themed via --color-focus. */
+:focus-visible {
+  outline: 2px solid var(--color-focus, currentColor);
+  outline-offset: 3px;
+}
+
+/* Suppress legacy focus ring when user did not arrive via keyboard. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip-link — visually hidden until focused, then surfaces top-left. */
+.ap-skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-2, 16px);
+  z-index: 1000;
+  padding: var(--space-1, 8px) var(--space-2, 16px);
+  background: var(--color-panel, #fbf8f3);
+  color: var(--color-text, #1a1611);
+  border-radius: var(--radius-sm, 12px);
+  box-shadow: var(--shadow-low, none);
+  text-decoration: none;
+  transition: top 160ms ease-out;
+}
+
+.ap-skip-link:focus,
+.ap-skip-link:focus-visible {
+  top: var(--space-2, 16px);
+}
+
+/* Screen-reader-only utility (used by the hamburger label, etc.). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Defensive global motion-suppression under reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

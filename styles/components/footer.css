@@ -1,0 +1,116 @@
+/**
+ * styles/components/footer.css
+ *
+ * Footer component for the website.
+ *
+ * The footer is the second visible appearance of the motif (the
+ * first being the browser favicon declared in `<head>`), satisfying the
+ * "recurring branding mark in at least two locations" clause of .
+ * The motif is rendered as a small static SVG (`.ap-mark`) sized 24–32 CSS
+ * pixels square so it reads as a brand glyph rather than as decoration.
+ *
+ * Layout summary
+ *   • `.ap-footer` is a flex column at the base viewport so the copyright
+ *     line, motif mark, and last-updated `<time>` stack vertically on
+ *     phones. At ≥ --bp-md (860 px) the same children reflow to a single
+ *     horizontal row with `space-between` distribution, mirroring an
+ *     editorial colophon.
+ *   • A hairline `border-block-start` drawn from `--color-line` separates
+ *     the footer from the last section without competing with the
+ *     section card's own border.
+ *   • `padding-block: var(--space-8)` and `margin-block-start: var(--space-12)`
+ *     keep the footer on the same 8 px spacing rhythm as the rest of the
+ *     document.
+ *
+ * Paint envelope: every colour, border-colour, and font-family value
+ * resolves through a design system custom property declared in
+ * `styles/tokens.css`. The workspace-local Stylelint rule
+ * `local/token-only-paint` enforces that constraint.
+ *
+ * Related:  (8 px spacing rhythm),  (`<footer
+ * role="contentinfo">` is the single contentinfo landmark).
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. `.ap-footer`outer container                                          *
+ *                                                                            *
+ * Mobile-first: flex column. At ≥ --bp-md the children reflow to a row.     *
+ * The hairline top border uses --color-line (the same token consumed by    *
+ * the canvas motif's edge stroke), so the footer optically rhymes with the *
+ * generative mark sitting beside it.                                       *
+ * -------------------------------------------------------------------------- */
+
+.ap-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3, 24px);
+
+  /* Vertical rhythm — both values are integer multiples of 8 px. */
+  margin-block-start: var(--space-12, 120px);
+  padding-block: var(--space-8, 64px);
+  padding-inline: var(--gutter, 24px);
+
+  /* Hairline top border, drawn from the design-token line colour. */
+  border-block-start: 1px solid var(--color-line, transparent);
+
+  /* Footer text reads as colophon-secondary copy. */
+  color: var(--color-text-muted, inherit);
+  font-family: var(--font-sans);
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-mark`static motif SVG                                           *
+ *                                                                            *
+ * Sized 28 px square, comfortably inside the 24–32 px window from the      *
+ * task. `flex-shrink: 0` keeps the glyph at full size when the footer      *
+ * collapses on narrow viewports. Strokes / fills inside the SVG inherit   *
+ * `--color-line` and `--color-accent-2` via inline style attributes set   *
+ * by `tools/render-svg-motif.mjs` at build time, so this rule does not    *
+ * need to declare paint properties on the SVG itself.                     *
+ * -------------------------------------------------------------------------- */
+
+.ap-mark {
+  flex-shrink: 0;
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. Last-updated typography (`<time datetime>`) and meta line              *
+ *                                                                            *
+ * The colophon date and any sibling meta line render in the muted text     *
+ * token at 0.875 rem so they sit clearly below body copy in the visual    *
+ * hierarchy. `font-variant-numeric: tabular-nums` keeps the YYYY-MM-DD    *
+ * stamp visually stable when the footer reflows.                          *
+ * -------------------------------------------------------------------------- */
+
+.ap-footer time[datetime],
+.ap-footer-meta {
+  color: var(--color-text-muted, inherit);
+  font-size: 0.875rem;
+  line-height: var(--lh-body, 1.62);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. Tier: ≥ --bp-md (860 px) — reflow to a horizontal colophon row         *
+ *                                                                            *
+ * Modern range media query syntax per the workspace conventions in        *
+ * `styles/layout.css`. The row distributes its three children with         *
+ * `space-between`, putting the copyright on the leading edge, the motif   *
+ * mark in the centre, and the last-updated time on the trailing edge.    *
+ * -------------------------------------------------------------------------- */
+
+@media (width >= 860px) {
+  .ap-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4, 32px);
+    text-align: start;
+  }
+}

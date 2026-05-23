@@ -1,0 +1,401 @@
+/**
+ * styles/components/section.css
+ *
+ * Content-section component for the website.
+ *
+ * Owns the editorial typography of the section header (eyebrow + title +
+ * optional offset note), the frosted-glass treatment of the section body
+ * card (`.ap-section-card`), and the timeline-entry layout that every
+ * dated section uses (`.ap-entry`, `.ap-entry-date`,
+ * `.ap-entry-content`, `.ap-entry-meta`, `.ap-entry-bullets`,
+ * `.ap-entry-links`).
+ *
+ * Layout is set in `styles/layout.css`:
+ *   • `.ap-section-head` is already a vertical flex stack with
+ *     `gap: var(--space-2)` and `margin-block-end: var(--space-5)`.
+ *   • `.ap-entry` is a single column at the base viewport and reflows to
+ *     a two-column grid (date column + content column) at ≥ `--bp-md`.
+ *   • Editorial offsets `.ap-offset-eyebrow`, `.ap-overlap-figure`, and
+ *     `.ap-uneven-gutter` are declared in layout.css for reuse anywhere a
+ *     section needs a deliberate ≥ 24 px displacement.
+ *
+ * Surface fundamentals come from `styles/components/card.css`:
+ *   • `.ap-section-card` extends `.ap-card` (radius-lg, hairline border,
+ *     padding tier, and the reduced-transparency opaque-fill fallback).
+ *   • The glass treatment (backdrop blur + alpha fill + hairline border)
+ *     is layered on top here per , and is replaced by the opaque
+ *     panel fill under `prefers-reduced-transparency: reduce`
+ *
+ * Typography of `.ap-section-title` is set in `styles/typography.css`
+ * (`--font-serif`, `--text-heading`, line-height 1.15, ls -0.02em). This
+ * file only nudges the title's `margin-block-start` to keep the eyebrow →
+ * title rhythm on the 8 px grid.
+ *
+ *
+ * Tokens consumed (every reference uses `var(--name, <documented-default>)`):
+ *   • --color-accent, --color-text, --color-text-muted     (paint roles)
+ *   • --color-line, --color-panel-opaque                   (border + RT fill)
+ *   • --font-sans, --font-serif                            (type stacks)
+ *   • --text-body, --text-subheading                       (type scale)
+ *   • --space-1, --space-2, --space-3                      (spacing rhythm)
+ *   • --measure-body                                       (note paragraph measure)
+ *   • --glass-blur, --glass-border, --glass-fill           (glass tokens)
+ *
+ * Lint contract: every `color`, `background`, `border-color`, and
+ * `font-family` declaration resolves through a design system custom
+ * property; the workspace-local `local/token-only-paint` Stylelint rule
+ * runs across this file. Modern range media query syntax is used
+ * throughout, matching the conventions in `layout.css`, `button.css`,
+ * `card.css`, `chip.css`, and `footer.css`.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. Section head — eyebrow + title + optional offset note                   *
+ *                                                                            *
+ * `.ap-section-head` itself is laid out by `styles/layout.css` (vertical    *
+ * flex column, gap = `--space-2`, margin-block-end = `--space-5`). What we *
+ * own here is the editorial paint of its three children.                    *
+ *                                                                            *
+ * The eyebrow is the chip-shaped "Section / Title" label that sits above   *
+ * the serif title. It mirrors `.ap-eyebrow` (declared in typography.css)   *
+ * but tints to `--color-accent` instead of `--color-text-soft` so the     *
+ * section title cluster reads as the start of a new editorial spread.     *
+ *                                                                            *
+ * `margin-block-end: 0` collapses the eyebrow's default paragraph margin  *
+ * so the gap between the eyebrow and the title is governed exclusively    *
+ * by the parent's flex `gap` (8-px rhythm).                      *
+ * -------------------------------------------------------------------------- */
+
+.ap-section-head .ap-section-eyebrow {
+  margin-block-end: 0;
+  color: var(--color-accent, currentColor);
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-size: var(--text-body, 1rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* The title typography (serif family, heading clamp, line-height 1.15,
+   letter-spacing -0.02em) lives in typography.css under the shared
+   `h2, .ap-section-title` selector. We only adjust the spacing rhythm
+   between the eyebrow and the title here. */
+.ap-section-head .ap-section-title {
+  margin-block-start: var(--space-1, 8px);
+  color: var(--color-text, currentColor);
+}
+
+/* The optional offset note is the italicised editorial caption that some
+   sections place beneath the title for context (e.g. "All entries listed
+   in reverse chronological order."). Constraining its inline size to
+   `--measure-body` keeps the note inside the editorial measure mandated
+   by  even when the section card itself stretches wider. */
+.ap-section-head .ap-section-note {
+  margin-block-start: var(--space-2, 16px);
+  max-inline-size: var(--measure-body, 65ch);
+  color: var(--color-text-muted, currentColor);
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. `.ap-section-card`frosted-glass section surface            *
+ *                                                                            *
+ * Layered on top of `.ap-card.ap-section-card` (declared in card.css), so  *
+ * the radius (--radius-lg), hairline border, and padding tiers come from  *
+ * the base card and are not redeclared here. We add the glass envelope:   *
+ *                                                                            *
+ *   • `position: relative`establishes a stacking context so any *
+ *                                    pseudo-elements / overflowing entries *
+ *                                    stay inside the rounded corners.      *
+ *   • `background: var(--glass-fill)`alpha fill computed in tokens.css  *
+ *                                    via color-mix of `--color-panel`    *
+ *                                    and `--glass-alpha` (= 0.55, inside   *
+ *                                    the [0.40, 0.70] envelope of ).*
+ *   • `backdrop-filter`blur from `--glass-blur` (= 16 px,    *
+ *                                    inside [10, 24] of ) plus a    *
+ *                                    saturate(120%) lift to keep the warm  *
+ *                                    cream palette readable behind the    *
+ *                                    blur. The `-webkit-backdrop-filter`  *
+ *                                    twin is restated for Safari ≤ 17.    *
+ *   • `border`hairline border whose width comes    *
+ *                                    from `--glass-border` (= 1 px, inside *
+ *                                    [0.5, 1.5] of ) and colour    *
+ *                                    from `--color-line`. The shorthand   *
+ *                                    overrides the base card's border but *
+ *                                    keeps the same paint token.           *
+ *                                                                            *
+ * The `.ap-section-card` selector is intentionally non-chained here: the  *
+ * glass surface treatment is part of the section card's identity, so      *
+ * consumers writing `<div class="ap-section-card">` (without the          *
+ * `.ap-card` base) still receive the full envelope. The base card-shape   *
+ * declarations (radius, padding) are picked up via the chained selector  *
+ * `.ap-card.ap-section-card` in card.css when the markup uses both       *
+ * classes together.                                                        *
+ * -------------------------------------------------------------------------- */
+
+.ap-section-card {
+  position: relative;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 3. `.ap-entry`timeline / publication row                                *
+ *                                                                            *
+ * `.ap-entry` is laid out as a single column at the base viewport and     *
+ * reflows to a two-column grid (date column + content column) at         *
+ * ≥ --bp-md by `styles/layout.css`. Here we add the vertical rhythm that *
+ * separates stacked entries inside a section card and the hairline rule  *
+ * between them.                                                            *
+ *                                                                            *
+ * `:last-child` strips the trailing rule so the section card itself owns *
+ * the visual termination of the list (its rounded bottom edge).           *
+ *                                                                            *
+ * The entry's title is declared as a serif `<h3>` per the design's        *
+ * "publication entry" and "timeline entry" patterns. The global `h3` rule *
+ * in typography.css uses `--font-sans` for generic UI labels; inside an   *
+ * entry the title sits at the visual centre of the row and earns the     *
+ * serif treatment. `margin-block-end: var(--space-1)` keeps the title →  *
+ * meta line gap on the 8 px rhythm.                             *
+ * -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- *
+ * 3. `.ap-entry`timeline / publication row as interactive card           *
+ *                                                                            *
+ * Each entry is a self-contained rounded white card with a hairline       *
+ * border. On pointer-fine devices an overlaid radial gradient follows the *
+ * cursor (driven by `--mouse-x` / `--mouse-y` set by scripts/spotlight.js *
+ * + `--spotlight-opacity` for the smooth fade-in/out). The card itself    *
+ * also picks up the `data-magnetic` translation handled by               *
+ * scripts/magnetic.js for a gentle pull toward the cursor.                *
+ *                                                                            *
+ * Layout columns and gaps come from `styles/layout.css`; this rule only   *
+ * paints the surface.                                                      *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry {
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-3, 24px) var(--space-4, 32px);
+  background: var(--color-panel, transparent);
+  border: 1px solid var(--color-line, currentColor);
+  border-radius: var(--radius-md, 20px);
+  box-shadow: var(--shadow-low, none);
+  overflow: hidden;
+  transition:
+    box-shadow var(--dur-fast, 160ms) var(--ease-out, ease-out),
+    border-color var(--dur-fast, 160ms) var(--ease-out, ease-out);
+}
+
+@media (width >= 860px) {
+  .ap-entry {
+    padding: var(--space-4, 32px);
+  }
+}
+
+/* Cursor-following spotlight gradient — sits behind content via z-index.
+   Three overlapping warm washes blended with screen mode for a smooth
+   rose-gold transition rather than discrete colored blobs. */
+.ap-entry::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: var(--spotlight-opacity, 0);
+  background:
+    radial-gradient(
+      450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--spotlight-fill, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      400px circle at calc(var(--mouse-x, 50%) + 40px) calc(var(--mouse-y, 50%) - 30px),
+      var(--spotlight-fill-warm, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      380px circle at calc(var(--mouse-x, 50%) - 30px) calc(var(--mouse-y, 50%) + 25px),
+      var(--spotlight-fill-cool, transparent),
+      transparent 60%
+    );
+  transition: opacity var(--dur-mid, 480ms) var(--ease-out, ease-out);
+}
+
+.ap-entry:hover {
+  box-shadow: var(--shadow-high, none);
+  border-color: var(--color-line-hover, currentColor);
+}
+
+/* When an entry has no date column, span the content across the full width
+   instead of leaving an empty first grid column. This applies to entries
+   like the Neural Model Checking section that only contain prose. */
+.ap-entry:not(:has(.ap-entry-date)) {
+  grid-template-columns: 1fr;
+}
+
+.ap-entry:not(:has(.ap-entry-date)) p {
+  max-inline-size: none;
+}
+
+.ap-entry h3 {
+  margin-block-end: var(--space-1, 8px);
+  color: var(--color-text, currentColor);
+  font-family: var(--font-serif, ui-serif, serif);
+  font-size: var(--text-subheading, 1.15rem);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4. `.ap-entry-date`date column                                          *
+ *                                                                            *
+ * The leading column at ≥ --bp-md. Tabular numerals (`tnum` feature +     *
+ * `tabular-nums` variant) keep date strings vertically aligned across     *
+ * stacked entries even when the digits are mixed-width.                    *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry-date {
+  color: var(--color-text-muted, currentColor);
+  font-family: var(--font-sans, ui-sans-serif, sans-serif);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-body, 1rem);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 5. `.ap-entry-content`right column                                      *
+ *                                                                            *
+ * Flex column so the title, meta line, bullets, and link cluster stack    *
+ * with a consistent inter-block gap (`--space-1`, 8 px). Individual      *
+ * children control any larger margins they need (e.g. `.ap-entry-links`   *
+ * uses `margin-block-start: var(--space-2)` for a wider gap above the     *
+ * pill cluster).                                                          *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 8px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 6. `.ap-entry-meta`venue / location / supervisor meta line              *
+ *                                                                            *
+ * The small muted line under the entry title. Mirrors `.ap-meta` (chip.css)*
+ * for visual cohesion when an entry shows both a venue chip and an inline *
+ * meta line.                                                              *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry-meta {
+  color: var(--color-text-muted, currentColor);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* -------------------------------------------------------------------------- *
+ * 7. `.ap-entry-bullets`descriptive bullet list                           *
+ *                                                                            *
+ * Used by the experience / leadership / service entries to expand on      *
+ * each role with one or more short bullets. The disc marker is left in    *
+ * place (calls for at least one descriptive bullet per entry, so  *
+ * the list semantics stay first-class). `padding-inline-start: --space-3` *
+ * indents the marker so the bullets visually nest beneath the title.     *
+ *                                                                            *
+ * `display: flex; flex-direction: column; gap: --space-1` gives each     *
+ * bullet a tight 8 px rhythm. Browsers vary on whether list-style is     *
+ * rendered when `<ul>` is a flex container; where the marker is dropped, *
+ * the indentation alone keeps the structure legible.                     *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 8px);
+  margin-block-start: var(--space-1, 8px);
+  padding-inline-start: var(--space-3, 24px);
+  list-style: disc;
+  color: var(--color-text, currentColor);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 8. `.ap-entry-links`chip-link cluster                                   *
+ *                                                                            *
+ * Houses the publication's external links (paper, talk, poster, arXiv,    *
+ * code). Individual chip styling (rest fill, hover, focus) is owned by   *
+ * `.ap-chip-link` in `styles/components/chip.css`; here we only define   *
+ * the cluster geometry: a wrapping flex row with an 8-px gap between     *
+ * pills and a 16-px lift above the previous content block so the cluster *
+ * reads as a distinct call-to-action row.                                 *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1, 8px);
+  margin-block-start: var(--space-2, 16px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 9. Reduced-transparency override                                 *
+ *                                                                            *
+ * When the visitor reports `prefers-reduced-transparency: reduce`,         *
+ * `tokens.css` already redefines `--glass-fill` to `--color-panel-opaque` *
+ * and collapses `--glass-blur` to `0px`. We additionally strip the       *
+ * `backdrop-filter` property entirely and pin the background to the      *
+ * opaque panel token so any UA that ignores the token override still     *
+ * receives an opaque section card. Modern range media query syntax,      *
+ * matching the rest of the workspace.                                     *
+ * -------------------------------------------------------------------------- */
+
+/* Reduced-transparency: no-op since section cards no longer use glass. */
+
+
+/* -------------------------------------------------------------------------- *
+ * Entry organisation logo                                                    *
+ *                                                                            *
+ * Floats in the top-right corner of an entry card as a small monochrome     *
+ * badge. The image itself is converted to grayscale at rest so it doesn't    *
+ * fight with the editorial palette; on hover it fades to full colour.        *
+ *                                                                            *
+ * Hidden on narrow viewports to keep the entry layout clean on mobile.       *
+ * -------------------------------------------------------------------------- */
+
+.ap-entry-logo {
+  position: absolute;
+  top: var(--space-3, 24px);
+  right: var(--space-4, 32px);
+  z-index: 1;
+  inline-size: 56px;
+  block-size: 56px;
+  max-inline-size: 56px;
+  object-fit: contain;
+  opacity: 0.55;
+  filter: grayscale(60%);
+  transition:
+    opacity var(--dur-mid, 480ms) var(--ease-out, ease-out),
+    filter var(--dur-mid, 480ms) var(--ease-out, ease-out),
+    transform var(--dur-mid, 480ms) var(--ease-out, ease-out);
+  pointer-events: none;
+}
+
+.ap-entry:hover .ap-entry-logo {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
+
+@media (width < 560px) {
+  .ap-entry-logo {
+    display: none;
+  }
+}
+
+/* Reserve right gutter inside the entry so logos don't overlap title text. */
+@media (width >= 560px) {
+  .ap-entry {
+    padding-inline-end: calc(var(--space-4, 32px) + 56px + var(--space-3, 24px));
+  }
+}

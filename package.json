@@ -1,0 +1,55 @@
+{
+  "name": "abhinandan-pal-github-io",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal academic website for Abhinandan Pal — HTML-first, vanilla ES modules, deployed to GitHub Pages.",
+  "homepage": "https://abhinandan-pal.github.io/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Abhinandan-Pal/Abhinandan-Pal.github.io"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "npm run lint:css && npm run lint:js && npm run lint:html",
+    "lint:css": "stylelint \"styles/**/*.css\"",
+    "lint:js": "eslint \"scripts/**/*.js\" \"tools/**/*.{js,mjs}\" \"tests/**/*.js\"",
+    "lint:html": "html-validate \"dist/**/*.html\"",
+    "test:unit": "vitest run --dir tests/unit",
+    "test:property": "vitest run --dir tests/property",
+    "test:perf": "vitest run --dir tests/perf",
+    "test:e2e": "playwright test",
+    "test:a11y": "pa11y-ci",
+    "test:lh": "lhci autorun",
+    "bundle:check": "node tools/check-bundle-size.mjs",
+    "links:check": "node tools/check-links.mjs",
+    "wire:css": "node tools/wire-async-css.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@eslint/js": "^9.17.0",
+    "@lhci/cli": "^0.14.0",
+    "@playwright/test": "^1.49.1",
+    "@vitest/browser": "^2.1.8",
+    "brotli-size": "^4.0.0",
+    "cssnano": "^7.0.6",
+    "eslint": "^9.17.0",
+    "fast-check": "^3.23.2",
+    "gzip-size": "^7.0.0",
+    "html-validate": "^9.2.2",
+    "pa11y-ci": "^3.1.0",
+    "playwright": "^1.49.1",
+    "postcss": "^8.4.49",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard": "^36.0.1",
+    "terser": "^5.37.0",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}

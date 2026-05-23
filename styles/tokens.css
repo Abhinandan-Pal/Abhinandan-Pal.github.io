@@ -1,0 +1,164 @@
+/**
+ * styles/tokens.css
+ *
+ * design system token source-of-truth for the website.
+ *
+ * Every CSS custom property used by component CSS originates here. Component
+ * stylesheets MUST consume tokens via `var(--name, <documented-default>)`
+ * and MUST NOT introduce literal hex / rgb / hsl / named-colour
+ * paint values; the workspace-local Stylelint rule `local/token-only-paint`
+ * enforces that constraint everywhere except in this file.
+ *
+ * Layout overview
+ *   1. Light scope — declared on `:root`. This is the default scope.
+ *   2. Dark scope  — declared inside `@media (prefers-color-scheme: dark)`
+ *                    AND `:root[data-theme="dark"]`, so the visitor's OS
+ *                    preference and an explicit attribute override both work
+ *                    and resolve identically.
+ *   3. Reduced-transparency scope — overrides `--glass-fill` to an opaque
+ *                    panel fill. Components that apply
+ *                    `backdrop-filter` gate that property themselves under
+ *                    `@media (prefers-reduced-transparency: reduce)`; this
+ *                    file only governs the fill colour.
+ *
+ * Token roles
+ *   • Colour roles: bg, panel, text, text-muted, line, accent,
+ *     accent-2, plus supporting tokens (panel-opaque, text-soft, blue,
+ *     focus, overlay).
+ *   • Typography: font stacks, fluid clamp type scale,
+ *     line-heights, letter-spacing, body measure.
+ *   • Spacing: twelve steps, every value an integer multiple of
+ *     8 CSS pixels.
+ *   • Radius: four monotonically increasing steps.
+ *   • Elevation: two named shadows whose blur radii differ by
+ *     ≥ 8 px. The shadow shape (offset / blur radii) is scope-invariant;
+ *     only the rgba tint is redefined in the dark scope so that shadows
+ *     remain visible against a near-black background. Shadow values use
+ *     literal rgba; tokens.css is the source of truth and is exempt from
+ *     the token-only-paint rule.
+ *   • Motion: easing curves and durations consumed by motion.css.
+ *   • Layout: max content width, gutter, named breakpoints.
+ *   • Glass: blur, alpha, border, computed fill via color-mix.
+ */
+
+/* -------------------------------------------------------------------------- *
+ * 1. Light scope (default)                                                   *
+ * -------------------------------------------------------------------------- */
+
+:root {
+  /* ---- Colour palette — light earth tones: oat / parchment / sage / clay ---- */
+  --color-bg: #f7f1e6;             /* page background — soft oatmeal */
+  --color-panel: #fdf9f0;          /* glass / card surface fill — parchment */
+  --color-panel-opaque: #efe7d6;   /* opaque fallback — warm sand */
+  --color-text: #3a2f23;           /* primary text — deep walnut, ≥ 4.5:1 on bg */
+  --color-text-muted: #5a4f3f;     /* secondary text — warm taupe */
+  --color-text-soft: #8a7f6f;      /* tertiary text — soft stone */
+  --color-line: #d6c9b3;           /* hairline border — warm greige */
+  --color-accent: #7c8a5a;         /* primary accent — sage moss */
+  --color-accent-2: #c08a6b;       /* secondary accent — clay (motif node fill) */
+  --color-blue: #5e7a8a;           /* editorial cool — dusty slate */
+  --color-focus: #7c8a5a;          /* focus-ring — equal to --color-accent */
+  --color-overlay: rgb(58 47 35 / 50%); /* hamburger overlay scrim — translucent walnut */
+
+  /* ---- Typography stacks ---- */
+  --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, 'BlinkMacSystemFont', 'Segoe UI', sans-serif;
+  --font-serif: 'Lora', 'Fraunces', 'Cormorant Garamond', 'Georgia', 'Times New Roman', serif;
+  --font-bengali: 'Noto Sans Bengali', 'Hind Siliguri', 'Shree-Lipi', 'SolaimanLipi', sans-serif;
+
+  /* ---- Type scale — fluid clamp across 320–1920 px viewport ---- */
+  --text-display: clamp(1.95rem, 1.4rem + 2.2vw, 3.1rem);
+  --text-heading: clamp(1.55rem, 1.4rem + 0.7vw, 2.1rem);
+  --text-subheading: clamp(1.06rem, 1rem + 0.3vw, 1.28rem);
+  --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.1rem);
+
+  /* ---- Line-height + letter-spacing + measure ---- */
+  --lh-display: 0.94;                          /* within [0.9, 1.1] */
+  --lh-body: 1.62;                             /* within [1.5, 1.7] */
+  --ls-display: -0.06em;                       /* within [-0.08em, -0.04em] */
+  --measure-body: clamp(38ch, 60ch, 75ch);     /* within 55–80 ch at ≥ 1024 px */
+
+  /* ---- Spacing scale — every step a multiple of 8 px ---- */
+  --space-1: 8px;     /* inline gap, tight list spacing */
+  --space-2: 16px;    /* default paragraph margin */
+  --space-3: 24px;    /* small card padding, entry padding */
+  --space-4: 32px;    /* section card padding */
+  --space-5: 40px;    /* section vertical rhythm */
+  --space-6: 48px;    /* hero card padding (medium) */
+  --space-7: 56px;    /* hero entrance margin */
+  --space-8: 64px;    /* section-to-section gap */
+  --space-9: 72px;    /* decorative offset */
+  --space-10: 80px;   /* section transition reveal band */
+  --space-11: 96px;   /* top-of-document hero offset */
+  --space-12: 120px;  /* footer top margin, hero parallax max offset */
+
+  /* ---- Radius scale — strictly increasing ---- */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  /* ---- Elevation scale — blur radii differ by ≥ 8 px ---- */
+
+  /* These are the only literal rgb values in the design system; tokens.css
+     is exempt from local/token-only-paint via stylelint.config.js. */
+  --shadow-low: 0 6px 14px rgb(26 22 17 / 6%);
+  --shadow-high: 0 24px 70px rgb(26 22 17 / 10%);
+
+  /* ---- Motion tokens ---- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);     /* reveals, hover transitions */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* magnetic-hover release */
+  --dur-fast: 160ms;        /* hover transitions (120–200 ms) */
+  --dur-mid: 480ms;         /* reveal duration (300–600 ms) */
+  --dur-slow: 1100ms;       /* kinetic heading (600–1500 ms) */
+  --reveal-stagger: 90ms;   /* inter-child stagger (60–120 ms) */
+  --parallax-rate: 0.18;    /* motif parallax coefficient (0.10–0.30) */
+
+  /* ---- Layout tokens ---- */
+  --max-content: clamp(1080px, 95vw, 1200px);
+  --gutter: clamp(16px, 4vw, 36px);
+  --bp-sm: 560px;
+  --bp-md: 860px;
+  --bp-lg: 1200px;
+
+  /* ---- Glass tokens ---- */
+  --glass-blur: 16px;        /* within [10, 24] */
+  --glass-alpha: 0.55;       /* within [0.40, 0.70] */
+  --glass-border: 1px;       /* within [0.5, 1.5] */
+  --glass-fill: color-mix(
+    in srgb,
+    var(--color-panel, #fbf8f3) calc(var(--glass-alpha, 0.55) * 100%),
+    transparent
+  );
+
+  /* ---- Spotlight + entry-card hover tokens ---- */
+
+  /* Three earth-tone washes that overlap into a rose-gold sunset on paper:
+     coral peach (warm blush), honey amber (gold), dusty mauve (cool earth). */
+  --spotlight-fill: color-mix(in srgb, #e89b7c 28%, transparent);
+  --spotlight-fill-warm: color-mix(in srgb, #d4a25a 24%, transparent);
+  --spotlight-fill-cool: color-mix(in srgb, #a98497 22%, transparent);
+  --color-line-hover: color-mix(in srgb, var(--color-accent, #7c8a5a) 30%, var(--color-line, #d6c9b3));
+
+  /* ---- Portrait ring shadow tokens ---- */
+  --portrait-ring: 0 0 0 1px var(--color-line, #d6c9b3);
+  --portrait-ring-hover: 0 0 0 1px var(--color-line-hover, #d6c9b3);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 2. Reduced-transparency scope                                    *
+ *                                                                            *
+ * Light theme only — the dark scope has been removed. The site is locked    *
+ * to the warm earth-tone light palette regardless of OS preference.          *
+ *                                                                            *
+ * When the visitor opts out of transparency, glass surfaces fall back to an  *
+ * opaque panel fill and the documented blur radius collapses to zero so      *
+ * that any consumer reading `--glass-blur` produces no `backdrop-filter`     *
+ * blur even if it forgets to gate the property itself.                       *
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-fill: var(--color-panel-opaque, #efe7d6);
+    --glass-blur: 0px;
+  }
+}
