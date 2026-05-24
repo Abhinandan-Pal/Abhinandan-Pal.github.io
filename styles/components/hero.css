@@ -102,6 +102,12 @@
   padding-block: var(--space-11, 96px) var(--space-8, 64px);
 }
 
+@media (width < 860px) {
+  .ap-hero {
+    padding-block: var(--space-6, 48px) var(--space-5, 40px);
+  }
+}
+
 /* -------------------------------------------------------------------------- *
  * 2. `.ap-motif`animated canvas substrate                                 *
  *                                                                            *
@@ -300,9 +306,20 @@
 
 .ap-actions {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: var(--space-1, 8px);
   margin-block-start: var(--space-3, 24px);
+}
+
+@media (width < 560px) {
+  .ap-actions {
+    gap: var(--space-2, 16px);
+  }
+
+  .ap-actions .ap-button {
+    padding-inline: var(--space-2, 16px);
+    flex: 1 1 auto;
+  }
 }
 
 /* -------------------------------------------------------------------------- *
@@ -337,6 +354,12 @@
   box-shadow: var(--shadow-low, none);
   padding: var(--space-5, 40px);
   color: var(--color-text, currentColor);
+}
+
+@media (width < 560px) {
+  .ap-side-card {
+    padding: var(--space-4, 32px);
+  }
 }
 
 @media (width >= 860px) {
@@ -400,6 +423,13 @@
   min-inline-size: 0;
 }
 
+@media (width < 560px) {
+  .ap-info-list li {
+    grid-template-columns: 1fr;
+    gap: var(--space-1, 8px);
+  }
+}
+
 .ap-info-list li > :nth-child(2) {
   min-inline-size: 0;
   overflow-wrap: anywhere;
@@ -460,8 +490,8 @@
 }
 
 .ap-portrait img {
-  inline-size: clamp(180px, 38vw, 280px);
-  block-size: clamp(180px, 38vw, 280px);
+  inline-size: clamp(140px, 32vw, 280px);
+  block-size: clamp(140px, 32vw, 280px);
   border-radius: 999px;
   border: 3px solid var(--color-panel, currentColor);
   box-shadow: var(--portrait-ring, none), var(--shadow-low, none);
@@ -471,7 +501,8 @@
     box-shadow var(--dur-mid, 480ms) var(--ease-out, ease-out);
 }
 
-.ap-side-card:hover .ap-portrait img {
+.ap-side-card:hover .ap-portrait img,
+.ap-portrait:hover img {
   transform: translateY(-4px) scale(1.02);
   box-shadow: var(--portrait-ring-hover, none), var(--shadow-high, none);
 }

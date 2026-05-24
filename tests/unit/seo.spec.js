@@ -187,7 +187,7 @@ describe('SEO and structured data', () => {
     const robotsPath = resolve(repoRoot, 'robots.txt');
     expect(existsSync(robotsPath), `expected ${robotsPath} to exist`).toBe(true);
     const robots = readFileSync(robotsPath, 'utf8');
-    // Spot-check the canonical contents documented in task 4.1.
+    // Spot-check the canonical contents documented in .
     expect(robots).toMatch(/User-agent:\s*\*/i);
     expect(robots).toMatch(/Allow:\s*\//i);
     expect(robots).toMatch(/Sitemap:\s*https?:\/\//i);

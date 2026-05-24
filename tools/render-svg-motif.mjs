@@ -209,7 +209,7 @@ function injectSvg(html, svgInner) {
   if (!match) {
     throw new Error(
       'Could not find <svg class="ap-motif-fallback"> in index.html. ' +
-        'Has task 3.2 (hero markup) been run?',
+        'Has  (hero markup) been run?',
     );
   }
   const [, openTag] = match;

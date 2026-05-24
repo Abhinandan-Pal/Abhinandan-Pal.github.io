@@ -319,7 +319,7 @@
   max-inline-size: 100%;
   max-block-size: 100%;
   margin: 0;
-  padding: var(--space-8, 64px);
+  padding: var(--space-6, 48px) var(--gutter, 24px);
   border: 0;
   background: var(--color-panel-opaque, transparent);
   color: var(--color-text, currentcolor);
@@ -356,7 +356,7 @@
 .ap-overlay-links {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2, 16px);
+  gap: 0;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -364,10 +364,11 @@
 
 .ap-overlay-links a {
   display: block;
-  padding-block: var(--space-3, 24px);
+  padding-block: var(--space-2, 16px);
   color: var(--color-text, currentcolor);
-  font-family: var(--font-serif, serif);
-  font-size: var(--text-heading, 1.72rem);
+  font-family: var(--font-sans, sans-serif);
+  font-size: 1rem;
+  font-weight: 500;
   text-decoration: none;
   transition: color var(--dur-fast, 160ms) var(--ease-out, ease-out);
 }

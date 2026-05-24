@@ -152,7 +152,7 @@ describe('EC-2 — Intl.Segmenter splits Bengali into graphemes, not bytes', () 
 // 3. Date sort stability
 // ---------------------------------------------------------------------------
 //
-// render.js (and the data sort in task 6.1) sort by descending date.
+// render.js (and the data sort in ) sort by descending date.
 // JavaScript's `Array#sort` has been stable in V8 since 7.0 (Node 12+),
 // so ties resolve in source order. We lock that contract with a
 // representative fixture: two publications in the same month must keep
@@ -189,7 +189,7 @@ describe('EC-3 — descending date sort is stable for tied dates', () => {
 // ---------------------------------------------------------------------------
 //
 // `tools/contrast-check.mjs#parseHex` is shared between the build-time
-// CLI and the property test at task 11.1. Locking the four canonical
+// CLI and the property test at . Locking the four canonical
 // hex shapes here keeps the AA-contrast pipeline honest even if the
 // parser is rewritten later.
 

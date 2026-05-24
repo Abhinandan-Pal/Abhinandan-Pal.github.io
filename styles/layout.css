@@ -68,11 +68,23 @@ body {
   padding-block: var(--space-8, 64px);
 }
 
+@media (width < 560px) {
+  .ap-section {
+    padding-block: var(--space-5, 40px);
+  }
+}
+
 .ap-section-head {
   display: flex;
   flex-direction: column;
   gap: var(--space-2, 16px);
   margin-block-end: var(--space-5, 40px);
+}
+
+@media (width < 560px) {
+  .ap-section-head {
+    margin-block-end: var(--space-3, 24px);
+  }
 }
 
 /* -------------------------------------------------------------------------- *
@@ -97,6 +109,30 @@ body {
   /* Section card stacks N timeline entries vertically by default; the
      extra rhythm separates entries inside a single card. */
   gap: var(--space-3, 24px);
+}
+
+/* -------------------------------------------------------------------------- *
+ * 4a. Mobile hero composition (< --bp-md)                                    *
+ *                                                                            *
+ * Below 860 px we keep the two glass cards as separate boxes but reorder    *
+ * them so the side card ("At a glance" + portrait + UoB mark) appears       *
+ * first, giving the visitor a portrait-led identity intro, followed by the  *
+ * hero card with the lede + actions.                                        *
+ *                                                                            *
+ * Inside the side card, the portrait sits above the mini-title via flex     *
+ * `order` so the visual reading order is portrait → "At a glance" →        *
+ * info list → UoB mark.                                                     *
+ * -------------------------------------------------------------------------- */
+
+@media (width < 860px) {
+  .ap-hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3, 24px);
+  }
+
+  .ap-hero-card { order: 2; }
+  .ap-side-card { order: 1; }
 }
 
 /* -------------------------------------------------------------------------- *

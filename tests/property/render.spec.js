@@ -10,14 +10,14 @@
 // readable with JavaScript disabled.
 //
 // Why we read `index.html` directly rather than `dist/index.html`
-// (mirroring task 11.14):
+// (mirroring ):
 //   • The source HTML is the canonical author-edited document. The
 //     build step only inlines critical CSS and rewrites a single
 //     stylesheet link — every assertion in this spec applies equally
 //     to the source. Reading the source means the test runs without a
 //     prior `vite build`, which keeps the property suite (`npm run
 //     test:property`) fast and independent of the build pipeline.
-//   • Per task 11.11 we deliberately use a small regex / string-based
+//   • Per  we deliberately use a small regex / string-based
 //     parser rather than jsdom, so the property suite has no DOM
 //     dependency.
 

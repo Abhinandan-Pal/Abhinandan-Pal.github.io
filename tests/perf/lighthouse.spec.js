@@ -3,7 +3,7 @@
 //  — Performance budgets.
 //
 // The authoritative perf gate is `npm run test:lh` (Lighthouse CI via
-// `lighthouserc.cjs` at task 12.3). This Vitest spec is a lightweight
+// `lighthouserc.cjs` at ). This Vitest spec is a lightweight
 // gate that:
 //   1. Documents the documented budgets so they appear in the test
 //      output even when LH is not run.

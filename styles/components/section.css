@@ -179,7 +179,7 @@
 .ap-entry {
   position: relative;
   isolation: isolate;
-  padding: var(--space-3, 24px) var(--space-4, 32px);
+  padding: var(--space-3, 24px);
   background: var(--color-panel, transparent);
   border: 1px solid var(--color-line, currentColor);
   border-radius: var(--radius-md, 20px);
@@ -226,9 +226,14 @@
   transition: opacity var(--dur-mid, 480ms) var(--ease-out, ease-out);
 }
 
-.ap-entry:hover {
+.ap-entry:hover,
+.ap-entry.is-focused {
   box-shadow: var(--shadow-high, none);
   border-color: var(--color-line-hover, currentColor);
+}
+
+.ap-entry.is-focused::before {
+  opacity: 1;
 }
 
 /* When an entry has no date column, span the content across the full width
@@ -381,7 +386,8 @@
   pointer-events: none;
 }
 
-.ap-entry:hover .ap-entry-logo {
+.ap-entry:hover .ap-entry-logo,
+.ap-entry.is-focused .ap-entry-logo {
   opacity: 1;
   filter: grayscale(0%);
   transform: scale(1.05);

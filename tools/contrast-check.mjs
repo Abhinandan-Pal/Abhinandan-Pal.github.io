@@ -321,7 +321,7 @@ function documentedPairSpecs() {
   const pairs = [];
   const surfaces = ['bg', 'panel'];
 
-  // Body-text roles — must clear AA at 4.5 : 1.
+  // Body-text roles — must clear AA  : 1.
   for (const surface of surfaces) {
     pairs.push({
       name: `text on ${surface}`,
@@ -540,7 +540,7 @@ function printScopeTable(scope, pairs) {
 /**
  * CLI entry point. Reads `styles/tokens.css`, enumerates the documented
  * pairs for the light and dark scopes, and prints a pass/fail table per
- * scope. Always exits 0; the property test at task 11.1 is the gate.
+ * scope. Always exits 0; the property test at  is the gate.
  */
 async function main() {
   const { light, dark } = await readDocumentedPairs();

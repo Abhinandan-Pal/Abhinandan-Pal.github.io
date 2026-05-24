@@ -233,6 +233,14 @@ a:focus-visible {
   color: var(--color-text-soft, currentColor);
 }
 
+@media (width < 560px) {
+  .ap-eyebrow,
+  .ap-kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+}
+
 .ap-eyebrow + h2,
 .ap-eyebrow + .ap-section-title,
 .ap-kicker + h2,

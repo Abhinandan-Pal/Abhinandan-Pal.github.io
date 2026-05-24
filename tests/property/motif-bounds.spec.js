@@ -205,7 +205,7 @@ describe('motif bounds, opacity, and token-only paint', () => {
   it('background mode: |N| ∈ [30,120], |E| ∈ [40,240], paint setters resolve to tokens, globalAlpha ≤ 0.35', () => {
     // One combined property, evaluated 200 times against a randomly
     // generated `(seed, density)` pair, asserts the four invariants of
-    // task 7.7 jointly. Using a single `fc.assert` call rather than
+    //  jointly. Using a single `fc.assert` call rather than
     // splitting the four invariants into separate properties means a
     // counter-example reports the exact `(seed, density)` that broke any
     // one of them — which is the whole point of property-based testing

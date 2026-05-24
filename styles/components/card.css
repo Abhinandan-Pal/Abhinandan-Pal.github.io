@@ -125,6 +125,12 @@
   box-shadow: var(--shadow-high, none);
 }
 
+@media (width < 560px) {
+  .ap-card.ap-hero-card {
+    padding: var(--space-4, 32px);
+  }
+}
+
 /* -------------------------------------------------------------------------- *
  * 4. `.ap-small-card`small card variant                                   *
  *                                                                            *

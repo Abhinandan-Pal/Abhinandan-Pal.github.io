@@ -15,7 +15,7 @@
 //   • body text                  ≥ 4.5 : 1
 //   • large text / non-text UI   ≥ 3.0 : 1
 //
-// Per task 11.1 we use a two-arbitrary product:
+// Per  we use a two-arbitrary product:
 //
 //   • `fc.constantFrom(...pairNames)`picks one of the documented pair
 //     specs by its scope-invariant name (e.g. `"text on bg"`,

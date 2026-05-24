@@ -3,7 +3,7 @@
 //
 // The Open Graph image referenced from `<head>` must exist
 // at `assets/og-image.jpg` and must be at least 1200 × 630 pixels in JPEG
-// format. Until `tools/render-og.mjs` (planned for task 8.5 / 7.x) generates
+// format. Until `tools/render-og.mjs` (planned for  / 7.x) generates
 // the real artwork, `tools/make-og-placeholder.mjs` writes a minimal valid
 // baseline JPEG with those dimensions. This spec parses the JPEG byte stream
 // directly so it does not depend on any image-decoding library — it walks

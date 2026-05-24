@@ -425,7 +425,7 @@ test('glass envelope and reduced-transparency fallback', async ({ page, browserN
   // ─── Phase 2: standard-mode envelope on the pinned nav ──────────────────
   // The nav only acquires the glass treatment after the sentinel scrolls
   // past the top of the viewport. We don't fail when the script-driven
-  // toggle hasn't landed (e.g. before task 6.7), but we DO assert the
+  // toggle hasn't landed (e.g. before ), but we DO assert the
   // envelope when it has.
   const stuck = await scrollPastHeroAndWaitForStuckNav(page);
   if (stuck) {

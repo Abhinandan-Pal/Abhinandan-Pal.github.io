@@ -80,6 +80,7 @@ const CRITICAL_FILES = [
   'styles/reset.css',
   'styles/typography.css',
   'styles/layout.css',
+  'styles/components/nav.css',
   'styles/components/hero.css',
 ];
 
