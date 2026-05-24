@@ -296,16 +296,6 @@ const awards = [
     description: 'Awarded for academic excellence to one student at each INI (IIT, IIIT, NIT, etc.).',
   },
   {
-    name: "ENS Saclay Master's Scholarship",
-    date: '2023-06',
-    description: 'Awarded; declined to pursue PhD.',
-  },
-  {
-    name: "ENS Lyon Master's Scholarship",
-    date: '2023-03',
-    description: 'Awarded; declined to pursue PhD.',
-  },
-  {
     name: "ACM SRC Bronze Medal at SPLASH'22",
     date: '2022-12',
     description:
